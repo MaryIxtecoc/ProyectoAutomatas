@@ -1,0 +1,6 @@
+fastapi==0.115.*
+uvicorn[standard]==0.32.*
+spacy==3.8.*
+spacy-lookups-data==1.0.*
+stanza==1.10.*
+pytest==8.*
