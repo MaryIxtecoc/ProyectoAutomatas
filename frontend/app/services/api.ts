@@ -45,9 +45,13 @@ export async function apiFetch<T>(
     headers.set('Authorization', `Bearer ${token}`)
   }
 
-  const response = await fetch(`${apiUrl}${endpoint}`, {
+  const cleanApiUrl = apiUrl.replace(/\/$/, '')
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+
+  const response = await fetch(`${cleanApiUrl}${cleanEndpoint}`, {
     ...options,
     headers,
+    signal: AbortSignal.timeout(60000) // Espera 60s si Render está despierto/iniciando
   })
 
   // Sesión vencida o token inválido en endpoints protegidos.
