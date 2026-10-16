@@ -919,6 +919,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+<ClientOnly>
   <main class="register-page">
     <section
       class="panel"
@@ -1429,6 +1430,7 @@ onBeforeUnmount(() => {
       </div>
     </section>
   </main>
+  </ClientOnly>
 </template>
 
 <style scoped>
