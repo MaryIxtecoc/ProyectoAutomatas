@@ -41,7 +41,7 @@ RULES_ENABLED = os.getenv("NLP_RULES", "1") != "0"
 
 app = FastAPI(title="AutomatasFinal NLP", version="2.0.0")
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
     return {"status": "ok"}
 
