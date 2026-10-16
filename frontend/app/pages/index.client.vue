@@ -79,6 +79,7 @@ function loginWithQr() {
 </script>
 
 <template>
+<ClientOnly>
   <main class="login-page">
     <section class="panel">
       <div class="brand">
@@ -158,6 +159,7 @@ function loginWithQr() {
       </p>
     </section>
   </main>
+  </ClientOnly>
 </template>
 
 <style scoped>
