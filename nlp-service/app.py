@@ -41,6 +41,10 @@ RULES_ENABLED = os.getenv("NLP_RULES", "1") != "0"
 
 app = FastAPI(title="AutomatasFinal NLP", version="2.0.0")
 
+@app.get("/")
+def read_root():
+    return {"status": "ok"}
+
 _resources: "OrderedDict[str, engines.Resources]" = OrderedDict()
 _lexicons: dict[str, VerbLexicon | None] = {}
 _lock = threading.Lock()
