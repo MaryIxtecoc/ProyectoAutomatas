@@ -1,8 +1,37 @@
+declare const useRuntimeConfig: any
+declare const navigateTo: any
+
+export function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem('token')
+}
+
+export function isAuthTokenValid(token: any): boolean {
+  return !!token
+}
+
+export function clearAuthToken(): void {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('token')
+  }
+}
+
+export function getAuthRole(token: any): string | null {
+  if (typeof window === 'undefined' || !token) return null
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.role || null
+  } catch {
+    return null
+  }
+}
+
 export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const apiUrl = useRuntimeConfig().public.apiUrl as string
+  const config = useRuntimeConfig()
+  const apiUrl = (config.public.apiUrl as string) || ''
 
   const token = getAuthToken()
 
