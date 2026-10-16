@@ -22,7 +22,7 @@ RUN python descargar_modelos.py
 
 COPY app.py engines.py rules.py ./
 COPY tests ./tests
-COPY evaluacion ./evaluacion
+#COPY evaluacion ./evaluacion
 
 # Las pruebas del autómata se ejecutan al construir: si fallan, no se publica.
 RUN python -m pytest -q tests
