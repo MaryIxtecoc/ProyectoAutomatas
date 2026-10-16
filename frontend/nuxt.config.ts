@@ -1,3 +1,4 @@
+
 export default defineNuxtConfig({
   ssr: false,
   nitro: {
