@@ -32,11 +32,18 @@ const success = ref('')
 
 const recaptchaEl = ref<HTMLElement | null>(null)
 
-const {
-  token: recaptchaToken,
-  render: renderRecaptcha,
-  reset: resetRecaptcha
-} = useRecaptcha()
+const recaptchaToken = ref('')
+let renderRecaptcha = () => {}
+let resetRecaptcha = () => {}
+
+onMounted(() => {
+  const recaptcha = useRecaptcha()
+  if (recaptcha) {
+    recaptchaToken.value = recaptcha.token
+    renderRecaptcha = recaptcha.render
+    resetRecaptcha = recaptcha.reset
+  }
+})
 
 // =====================================================
 // Cámara
@@ -934,13 +941,14 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- ================================================= -->
+      <!-- =================================================== -->
       <!-- RECAPTCHA PERMANENTE -->
-      <!-- ================================================= -->
-
-      <div class="recaptcha-wrap">
-        <div ref="recaptchaEl"></div>
-      </div>
+      <!-- =================================================== -->
+      <ClientOnly>
+        <div class="recaptcha-wrap">
+          <div ref="recaptchaEl"></div>
+        </div>
+      </ClientOnly>
 
       <!-- ================================================= -->
       <!-- PASO 1 -->

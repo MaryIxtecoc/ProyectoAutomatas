@@ -9,11 +9,21 @@ const loading = ref(false)
 const error = ref('')
 
 const recaptchaEl = ref<HTMLElement | null>(null)
-const { token: recaptchaToken, render: renderRecaptcha, reset: resetRecaptcha } = useRecaptcha()
+
+const recaptchaToken = ref('')
+let renderRecaptcha = (_el?: HTMLElement | null) => {}
+let resetRecaptcha = () => {}
 
 onMounted(async () => {
+  const recaptcha = useRecaptcha()
+  if (recaptcha) {
+    recaptchaToken.value = recaptcha.token
+    renderRecaptcha = recaptcha.render
+    resetRecaptcha = recaptcha.reset
+  }
+
   await nextTick()
-  if (recaptchaEl.value) {
+  if (recaptchaEl.value && renderRecaptcha) {
     renderRecaptcha(recaptchaEl.value)
   }
 })
@@ -116,9 +126,11 @@ function loginWithQr() {
           <NuxtLink to="/forgot-password" class="link">¿Olvidaste tu contraseña?</NuxtLink>
         </div>
 
+        <ClientOnly>
         <div class="recaptcha-wrap">
           <div ref="recaptchaEl"></div>
         </div>
+      </ClientOnly>
 
         <div v-if="error" class="error" role="alert">
           {{ error }}
