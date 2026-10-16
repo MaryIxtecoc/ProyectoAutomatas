@@ -24,6 +24,7 @@ from collections import OrderedDict
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+from fastapi.middleware.cors import CORSMiddleware
 
 import engines
 from rules import CLOSED_ADVERBS, RuleAutomaton, Token, VerbLexicon
@@ -44,6 +45,14 @@ app = FastAPI(title="AutomatasFinal NLP", version="2.0.0")
 @app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
     return {"status": "ok"}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 _resources: "OrderedDict[str, engines.Resources]" = OrderedDict()
 _lexicons: dict[str, VerbLexicon | None] = {}
