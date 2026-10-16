@@ -8,6 +8,7 @@ import {
   onBeforeUnmount
 } from 'vue'
 
+import { useRecaptcha } from 'vue3-recaptcha-v2'
 import { apiFetch } from '~/services/api'
 
 const step = ref<'form' | 'photo'>('form')

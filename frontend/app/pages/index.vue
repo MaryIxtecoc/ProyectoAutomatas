@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
 import { apiFetch } from '~/services/api'
+import { useRecaptcha } from 'vue3-recaptcha-v2'
 
 const email = ref('')
 const password = ref('')
