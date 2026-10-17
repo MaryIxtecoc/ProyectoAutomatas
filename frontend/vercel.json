@@ -1,5 +1,0 @@
-{
-  "framework": "nuxtjs",
-  "buildCommand": "npx nuxi generate",
-  "outputDirectory": ".output/public"
-}
