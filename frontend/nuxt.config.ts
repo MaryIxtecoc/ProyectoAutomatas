@@ -1,16 +1,9 @@
+// frontend/nuxt.config.ts
 export default defineNuxtConfig({
   ssr: false,
 
-  routeRules: {
-    '/**': { ssr: false }
-  },
-
   nitro: {
-    preset: 'vercel-static',
-    prerender: {
-      routes: [],
-      crawlLinks: false
-    }
+    preset: 'vercel'
   },
 
   runtimeConfig: {
