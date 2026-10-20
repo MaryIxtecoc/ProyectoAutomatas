@@ -1,0 +1,34 @@
+flowchart LR
+    U["👤 Usuario<br/>Navegador (Chrome / Edge / Firefox)"]
+
+    subgraph PC["Equipo local de desarrollo — 127.0.0.1 (localhost)"]
+        direction TB
+        FE["<b>Frontend</b><br/>Nuxt 4 · Vue 3 · TypeScript<br/>npm run dev<br/><b>127.0.0.1:3000</b> (HTTP)"]
+        BE["<b>Backend API</b><br/>.NET 8 · ASP.NET Core · EF Core<br/>JWT · reCAPTCHA · Swagger<br/><b>127.0.0.1:5000</b> (HTTP) /api"]
+        NLP["<b>Servicio NLP</b><br/>Python 3.11 · FastAPI · uvicorn<br/>Stanza + spaCy + autómata de reglas<br/><b>127.0.0.1:8000</b> (HTTP)"]
+        NG["ngrok (opcional)<br/>túnel HTTPS → :5000<br/>panel 127.0.0.1:4040"]
+    end
+
+    subgraph SB["Supabase (nube)"]
+        direction TB
+        DB[("<b>PostgreSQL</b><br/>Session pooler<br/>aws-0-us-east-2.pooler.supabase.com<br/><b>puerto 5432</b> · SSL")]
+        ST[("<b>Storage</b> (buckets privados)<br/>profile-photos · credentials<br/>stickers · analysis-files · analysis-reports<br/>&lt;proyecto&gt;.supabase.co<br/><b>puerto 443</b> · HTTPS")]
+    end
+
+    subgraph EXT["Servicios externos"]
+        direction TB
+        GM["Gmail SMTP<br/>smtp.gmail.com<br/><b>puerto 587</b> · STARTTLS"]
+        TW["Twilio WhatsApp API<br/>api.twilio.com<br/><b>puerto 443</b> · HTTPS"]
+        RC["Google reCAPTCHA<br/>www.google.com/recaptcha<br/><b>puerto 443</b> · HTTPS"]
+    end
+
+    U -- "HTTP :3000" --> FE
+    U -. "HTTPS (widget)" .-> RC
+    FE -- "REST JSON + JWT<br/>HTTP :5000 /api" --> BE
+    BE -- "POST /analyze<br/>HTTP :8000" --> NLP
+    BE -- "Npgsql / EF Core<br/>TCP 5432 SSL" --> DB
+    BE -- "HTTPS 443" --> ST
+    BE -- "SMTP 587" --> GM
+    BE -- "HTTPS 443" --> TW
+    BE -- "siteverify HTTPS 443" --> RC
+    NG -. "reenvía" .-> BE

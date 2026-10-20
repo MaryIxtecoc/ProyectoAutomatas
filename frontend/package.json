@@ -13,7 +13,6 @@
     "jsqr": "^1.4.0",
     "nuxt": "^4.5.2",
     "vue": "^3.5.42",
-    "vue-router": "^5.3.1",
-    "vue3-recaptcha-v2": "^2.1.0"
+    "vue-router": "^5.3.1"
   }
 }

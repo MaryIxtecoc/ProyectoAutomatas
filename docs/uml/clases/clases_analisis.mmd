@@ -1,0 +1,120 @@
+classDiagram
+    direction LR
+    class AnalysisController {
+        <<ApiController api/Analysis>>
+        +Create(CreateAnalysisRequest)
+        +Process(Guid)
+        +GetAll()
+        +GetById(Guid)
+        +DownloadReport(Guid)
+        +SendReport(Guid, SendAnalysisReportRequest)
+        +RetryAnalysis(Guid)
+        +DeleteAnalysis(Guid)
+    }
+    class AnalysisService {
+        +CreateAsync(request, userId) AnalysisJob
+        +ProcessAsync(jobId, userId)
+        +EnsureReportAsync(AnalysisJob) string?
+        +SendReportAsync(jobId, userId, channel)
+        +RetryAsync(jobId, userId) bool
+        +DeleteAsync(jobId, userId) bool
+    }
+    class TextAnalyzer {
+        <<Analizador propio - respaldo>>
+        +Analyze(text, language, dictionary) AnalysisOutput
+    }
+    class LanguageProfile {
+        +HashSet Pronouns
+        +HashSet Stopwords
+        +HashSet KnownVerbs
+        +HashSet KnownNouns
+        +string[] VerbSuffixes
+        +HashSet NonVerbs
+        +bool UsesCapitalizationForNames
+    }
+    class AnalysisOutput {
+        +int TotalWordCount
+        +List~WordFrequency~ MostFrequentWords
+        +List~WordFrequency~ LeastFrequentWords
+        +List~string~ PersonalPronouns
+        +List~string~ PersonNames
+        +List~string~ RootNouns
+        +List~string~ RootVerbs
+        +Dictionary OtherClassifications
+    }
+    class NlpServiceClient {
+        <<HttpClient>>
+        +AnalyzeAsync(text, language) NlpAnalysisResult?
+    }
+    class NlpAnalysisResult {
+        +string Engine
+        +string Model
+        +List~string~ Words
+        +List~string~ RootNouns
+        +List~string~ RootVerbs
+        +Dictionary Entities
+    }
+    class NlpResultMerger {
+        <<static>>
+        +Merge(manual, nlp, language) AnalysisOutput
+        +UnifyPersonNames(names) List~string~
+        +MarkManual(AnalysisOutput)
+    }
+    class EntityDictionaryService {
+        +GetAllAsync(language) List~EntityDictionaryEntry~
+    }
+    class PdfReportService {
+        +GenerateAsync(job, result) string
+    }
+    class INotificationService {
+        <<interface>>
+        +SendAnalysisReportAsync()
+    }
+    class SupabaseStorageService {
+        +UploadAsync()
+        +DownloadAsync()
+    }
+
+    namespace nlp_service_Python {
+        class FastAPI_app {
+            <<POST /analyze, GET /health>>
+            +run_analysis(text, language) dict
+        }
+        class Resources {
+            +spacy
+            +stanza
+            +pos_engine
+        }
+        class RuleAutomaton {
+            <<AFD q0 qSUJ qDET qVERB qVCONJ>>
+            +run(tokens) tokens
+            +symbol(token) str
+        }
+        class VerbLexicon {
+            +verb_lemma(form) str
+            +is_verb_lemma(lemma) bool
+        }
+        class Collector {
+            +tokens(list)
+            +entity(text, label)
+            +result() dict
+        }
+    }
+
+    AnalysisController --> AnalysisService
+    AnalysisService --> TextAnalyzer
+    AnalysisService --> NlpServiceClient
+    AnalysisService ..> NlpResultMerger
+    AnalysisService --> EntityDictionaryService
+    AnalysisService --> PdfReportService
+    AnalysisService --> INotificationService
+    AnalysisService --> SupabaseStorageService
+    TextAnalyzer --> LanguageProfile
+    TextAnalyzer ..> AnalysisOutput
+    NlpServiceClient ..> NlpAnalysisResult
+    NlpResultMerger ..> AnalysisOutput
+    NlpServiceClient ..> FastAPI_app : HTTP JSON
+    FastAPI_app --> Resources
+    FastAPI_app --> RuleAutomaton
+    FastAPI_app --> Collector
+    RuleAutomaton --> VerbLexicon

@@ -1,0 +1,174 @@
+classDiagram
+    direction LR
+    class AuthController {
+        <<ApiController api/Auth>>
+        +Register(RegisterRequest)
+        +Login(LoginRequest)
+        +LoginFacial(FacialLoginRequest)
+        +LoginByQr(QrLoginRequest)
+        +ForgotPassword(ForgotPasswordRequest)
+        +ResetPassword(ResetPasswordRequest)
+        +Logout()
+        +Me()
+    }
+    class UsersController {
+        <<ApiController api/Users - ADMIN, SUPERVISOR>>
+        +GetAll()
+        +GetById(Guid)
+        +Create(CreateUserRequest)
+        +Update(Guid, UpdateUserRequest)
+        +ChangeRole(Guid, short)
+        +SetActive(Guid, JsonElement)
+        +Delete(Guid)
+    }
+    class ProfileController {
+        <<ApiController api/Profile>>
+        +GetMyProfile()
+        +UpdateMyProfile(UpdateProfileRequest)
+        +ChangeMyPassword(ChangePasswordRequest)
+        +UpdateMyPhoto()
+        +GetMyCredential()
+        +RegenerateCredential()
+    }
+    class AuditController {
+        <<ApiController api/Audit - ADMIN>>
+        +Summary()
+        +Logs()
+        +Sessions()
+        +RevokeSession(Guid)
+        +RevokeUserSessions(Guid)
+    }
+    class AuthService {
+        +RegisterAsync(RegisterRequest) AuthResponse
+        +LoginAsync(LoginRequest) AuthResponse
+        +LoginFacialAsync(FacialLoginRequest) AuthResponse
+        +LoginByQrAsync(QrLoginRequest) AuthResponse
+        +RequestPasswordResetAsync(ForgotPasswordRequest)
+        +ResetPasswordAsync(ResetPasswordRequest)
+        +LogoutAsync()
+    }
+    class UserService {
+        +GetAllAsync() List~User~
+        +CreateAsync(CreateUserRequest) User
+        +UpdateAsync(Guid, UpdateUserRequest) bool
+        +ChangeRoleAsync(Guid, short) bool
+        +SetActiveAsync(Guid, bool) bool
+        +DeleteAsync(Guid) bool
+    }
+    class ProfileService {
+        +GetMyProfileAsync()
+        +UpdateMyProfileAsync(UpdateProfileRequest)
+        +ChangeMyPasswordAsync(ChangePasswordRequest)
+        +UpdateMyPhotoAsync()
+        +RegenerateCredentialAsync()
+    }
+    class SessionService {
+        +CreateAsync(userId, loginMethod) UserSession
+        +IsActiveAsync(Guid) bool
+        +RevokeAsync(Guid)
+        +RevokeAllForUserAsync(Guid) int
+    }
+    class AuditService {
+        +LogAsync(action, success, targetUserId, details)
+    }
+    class BiometricService {
+        +SaveFaceImageAsync()
+        +VerifyFaceAsync() FaceVerificationResult
+        +DeleteFaceDescriptorAsync()
+    }
+    class FaceRecognitionService {
+        <<Singleton - YuNet + SFace>>
+        +AnalyzeFace(byte[]) FaceRecognitionResult
+        +CropToFace(byte[]) byte[]
+        +Compare(a, b) double
+    }
+    class CredentialService {
+        +IssueAsync(...) (UserCredential, byte[])
+        +HashQrSecret(string)$ string
+        +RenderPreviewAsync()
+    }
+    class CredentialPdfService {
+        +Generate() byte[]
+    }
+    class PasswordService {
+        +HashPassword(string) string
+        +VerifyPassword(password, passwordHash) bool
+    }
+    class PasswordPolicy {
+        <<static>>
+        +Validate(string)
+    }
+    class PhonePolicy {
+        <<static>>
+        +Normalize(string) string
+    }
+    class NotificationDispatcher {
+        +QueueCredential()
+        +QueuePasswordReset()
+    }
+    class INotificationService {
+        <<interface>>
+        +SendCredentialAsync()
+        +SendPasswordResetAsync()
+        +SendAnalysisReportAsync()
+    }
+    class NotificationService
+    class IEmailSender {
+        <<interface>>
+        +SendAsync()
+    }
+    class IWhatsAppSender {
+        <<interface>>
+        +SendAsync()
+    }
+    class SmtpEmailSender
+    class TwilioWhatsAppSender
+    class IRecaptchaService {
+        <<interface>>
+        +VerifyAsync(token, remoteIp) bool
+    }
+    class RecaptchaService
+    class SupabaseStorageService {
+        +UploadAsync()
+        +DownloadAsync()
+        +DeleteAsync()
+        +CreateSignedUrlAsync()
+    }
+    class AppDbContext {
+        <<DbContext EF Core>>
+    }
+
+    AuthController --> AuthService
+    AuthController --> IRecaptchaService
+    UsersController --> UserService
+    ProfileController --> ProfileService
+    AuditController --> SessionService
+    AuditController --> AuditService
+    AuthService --> PasswordService
+    AuthService --> FaceRecognitionService
+    AuthService --> BiometricService
+    AuthService --> CredentialService
+    AuthService --> NotificationDispatcher
+    AuthService --> SessionService
+    AuthService --> AuditService
+    AuthService --> SupabaseStorageService
+    AuthService --> AppDbContext
+    AuthService ..> PasswordPolicy
+    AuthService ..> PhonePolicy
+    UserService --> PasswordService
+    UserService --> SessionService
+    UserService --> AuditService
+    UserService ..> PhonePolicy
+    ProfileService --> AuthService
+    ProfileService --> CredentialService
+    ProfileService --> SupabaseStorageService
+    BiometricService --> FaceRecognitionService
+    CredentialService --> CredentialPdfService
+    CredentialService --> SupabaseStorageService
+    NotificationDispatcher ..> INotificationService
+    INotificationService <|.. NotificationService
+    NotificationService --> IEmailSender
+    NotificationService --> IWhatsAppSender
+    IEmailSender <|.. SmtpEmailSender
+    IWhatsAppSender <|.. TwilioWhatsAppSender
+    IRecaptchaService <|.. RecaptchaService

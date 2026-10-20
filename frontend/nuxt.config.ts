@@ -1,10 +1,11 @@
-// frontend/nuxt.config.ts
 export default defineNuxtConfig({
-  ssr: false,
+  compatibilityDate: '2025-07-15',
+  devtools: { enabled: true },
 
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'https://proyectoautomatas-1bk6.onrender.com'
-    }
-  }
+      apiUrl: 'http://localhost:5000/api',
+      recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+    },
+  },
 })
