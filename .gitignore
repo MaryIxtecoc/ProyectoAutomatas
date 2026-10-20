@@ -32,3 +32,9 @@ nlp-service/__pycache__/
 
 # Carpeta temporal de archivos para borrar a mano
 _para_borrar/
+
+# Archivos que suben los usuarios (se guardan en Supabase en producción)
+**/storage/
+
+# Pruebas de Python
+**/.pytest_cache/

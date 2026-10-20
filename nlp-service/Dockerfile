@@ -22,11 +22,11 @@ RUN python descargar_modelos.py
 
 COPY app.py engines.py rules.py ./
 COPY tests ./tests
-#COPY evaluacion ./evaluacion
+COPY evaluacion ./evaluacion
 
 # Las pruebas del autómata se ejecutan al construir: si fallan, no se publica.
 RUN python -m pytest -q tests
 
 EXPOSE 8000
 # "::" escucha en IPv4 e IPv6 (la red privada de Railway usa IPv6).
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT}"]
+CMD ["sh", "-c", "uvicorn app:app --host :: --port ${PORT}"]
