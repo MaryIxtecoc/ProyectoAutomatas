@@ -1,10 +1,5 @@
-declare const defineNuxtRouteMiddleware: any
-declare const navigateTo: any
-
-import { getAuthToken, isAuthTokenValid, clearAuthToken, getAuthRole } from '../services/api'
-
 export default defineNuxtRouteMiddleware(() => {
-  if (typeof window === 'undefined') return
+  if (import.meta.server) return
 
   const token = getAuthToken()
 

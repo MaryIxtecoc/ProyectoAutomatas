@@ -1,0 +1,157 @@
+classDiagram
+    direction TB
+    class Role {
+        +short Id
+        +string Code
+        +string Name
+        +string? Description
+        +DateTime CreatedAt
+        +ICollection~User~ Users
+    }
+    class User {
+        +Guid Id
+        +string Email
+        +string Phone
+        +DateOnly BirthDate
+        +string Nickname
+        +string PasswordHash
+        +short RoleId
+        +NotificationMethod NotificationMethod
+        +string? PhotoOriginalPath
+        +string? PhotoModifiedPath
+        +bool IsActive
+        +DateTime? DeletedAt
+        +DateTime? LastLoginAt
+        +DateTime CreatedAt
+        +DateTime UpdatedAt
+    }
+    class UserBiometric {
+        +Guid UserId
+        +string FaceDescriptor
+        +DateTime CreatedAt
+        +DateTime UpdatedAt
+    }
+    class UserCredential {
+        +Guid Id
+        +Guid UserId
+        +string QrCodeValue
+        +string? PdfPath
+        +bool IsActive
+        +DateTime IssuedAt
+    }
+    class CredentialDesign {
+        +Guid Id
+        +Guid UserId
+        +string Template
+        +string? BackgroundColor
+        +string? AccentColor
+        +string? TextColor
+        +string? PhotoStyle
+        +string? QrStyle
+        +string? Decorations
+    }
+    class ProfileChangeRequest {
+        +const string StatusPending = "PENDING"
+        +const string StatusApproved = "APPROVED"
+        +const string StatusRejected = "REJECTED"
+        +Guid Id
+        +Guid UserId
+        +string? RequestedEmail
+        +DateOnly? RequestedBirthDate
+        +string Reason
+        +string Status
+        +Guid? ReviewedBy
+        +DateTime? ReviewedAt
+    }
+    class PasswordResetToken {
+        +Guid Id
+        +Guid UserId
+        +string TokenHash
+        +DateTime ExpiresAt
+        +DateTime? UsedAt
+        +IPAddress? RequestedIp
+    }
+    class UserSession {
+        +Guid Id
+        +Guid UserId
+        +string LoginMethod
+        +IPAddress? IpAddress
+        +string? UserAgent
+        +DateTime LastSeenAt
+        +DateTime ExpiresAt
+        +DateTime? RevokedAt
+        +Guid? RevokedBy
+        +string? RevokeReason
+    }
+    class AnalysisJob {
+        +Guid Id
+        +Guid UserId
+        +string FileName
+        +string FileStoragePath
+        +AnalysisLanguage Language
+        +AnalysisStatus Status
+        +bool ReportRequested
+        +string? ReportPdfPath
+        +string? ErrorMessage
+        +DateTime UploadedAt
+        +DateTime? ProcessedAt
+    }
+    class AnalysisResult {
+        +Guid Id
+        +Guid JobId
+        +int TotalWordCount
+        +string? MostFrequentWords
+        +string? LeastFrequentWords
+        +string? PersonalPronouns
+        +string? PersonNames
+        +string? RootNouns
+        +string? RootVerbs
+        +string? OtherClassifications
+        +string FullResult
+    }
+    class AuditLog {
+        +long Id
+        +Guid? UserId
+        +Guid? TargetUserId
+        +bool? Success
+        +string Action
+        +string? Details
+        +IPAddress? IpAddress
+        +string? UserAgent
+        +DateTime CreatedAt
+    }
+    class NotificationMethod {
+        <<enumeration>>
+        EMAIL
+        WHATSAPP
+        BOTH
+    }
+    class AnalysisLanguage {
+        <<enumeration>>
+        ES
+        EN
+        RU
+        ZH
+        AR
+    }
+    class AnalysisStatus {
+        <<enumeration>>
+        PENDING
+        PROCESSING
+        COMPLETED
+        FAILED
+    }
+
+    Role "1" --> "0..*" User : Users
+    User "1" --> "0..1" UserBiometric : Biometric
+    User "1" --> "0..*" UserCredential : Credentials
+    User "1" --> "0..*" CredentialDesign
+    User "1" --> "0..*" ProfileChangeRequest
+    User "1" --> "0..*" PasswordResetToken : PasswordResetTokens
+    User "1" --> "0..*" UserSession : Sessions
+    User "1" --> "0..*" AnalysisJob : AnalysisJobs
+    User "0..1" --> "0..*" AuditLog : AuditLogs
+    AnalysisJob "1" --> "0..1" AnalysisResult : Results
+    User ..> NotificationMethod
+    AnalysisJob ..> AnalysisLanguage
+    AnalysisJob ..> AnalysisStatus

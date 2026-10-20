@@ -12,13 +12,13 @@ export interface TokenPayload {
 }
 
 export function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null
+  if (import.meta.server) return null
 
   return localStorage.getItem('token')
 }
 
 export function clearAuthToken() {
-  if (typeof window === 'undefined') return
+  if (import.meta.server) return
 
   localStorage.removeItem('token')
 }

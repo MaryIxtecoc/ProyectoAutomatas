@@ -1,0 +1,32 @@
+flowchart LR
+    U["👤 Usuario<br/>Navegador / móvil"]
+
+    subgraph VC["Vercel"]
+        FE["<b>Frontend</b> Nuxt 4<br/>https://&lt;app&gt;.vercel.app<br/><b>puerto 443</b> · HTTPS (SSL)"]
+    end
+
+    subgraph RW["Railway — proyecto AutomatasFinal"]
+        direction TB
+        BE["<b>Servicio backend</b><br/>Docker · .NET 8 (aspnet:8.0)<br/>contenedor <b>:8080</b><br/>público: https://&lt;backend&gt;.up.railway.app <b>:443</b>"]
+        NLP["<b>Servicio nlp</b><br/>Docker · python:3.11-slim<br/>Stanza + spaCy + reglas<br/>red privada: nlp.railway.internal<br/><b>:8000</b> · sin dominio público"]
+    end
+
+    subgraph SB["Supabase"]
+        DB[("<b>PostgreSQL</b><br/>aws-0-us-east-2.pooler.supabase.com<br/><b>:5432</b> · SSL")]
+        ST[("<b>Storage</b><br/>&lt;proyecto&gt;.supabase.co<br/><b>:443</b> · HTTPS")]
+    end
+
+    subgraph EXT["Servicios externos"]
+        GM["Gmail SMTP<br/>smtp.gmail.com <b>:587</b>"]
+        TW["Twilio API<br/>api.twilio.com <b>:443</b>"]
+        RC["Google reCAPTCHA<br/>www.google.com <b>:443</b>"]
+    end
+
+    U -- "HTTPS 443" --> FE
+    FE -- "REST JSON + JWT<br/>HTTPS 443 /api" --> BE
+    BE -- "HTTP :8000 red privada<br/>(no sale a internet)" --> NLP
+    BE -- "TCP 5432 SSL" --> DB
+    BE -- "HTTPS 443" --> ST
+    BE -- "SMTP 587 TLS" --> GM
+    BE -- "HTTPS 443" --> TW
+    BE -- "HTTPS 443" --> RC

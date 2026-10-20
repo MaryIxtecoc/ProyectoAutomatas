@@ -1,13 +1,10 @@
-declare const useRuntimeConfig: any
-
-import { getAuthToken } from '../services/api'
 // Helpers para leer archivos protegidos (fotos, credencial en PDF) desde el backend.
 // No se pueden usar directamente como src de <img> porque requieren el header
 // Authorization, así que se descargan como blob y se genera una object URL.
 // Nuxt los auto-importa desde app/utils.
 
 export async function fetchAuthedObjectUrl(endpoint: string): Promise<string | null> {
-  if (typeof window === 'undefined') return null
+  if (import.meta.server) return null
 
   const apiUrl = useRuntimeConfig().public.apiUrl as string
   const token = getAuthToken()

@@ -1,0 +1,1888 @@
+{
+  "info": {
+    "name": "AutomatasFinal API",
+    "description": "Colección generada desde Swagger. 1) Ajusta baseUrl. 2) Ejecuta Auth > POST /api/Auth/login: el token se guarda solo en {{token}} y el resto de peticiones lo usan.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Analysis",
+      "item": [
+        {
+          "name": "POST /api/Analysis",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": ""
+                },
+                {
+                  "key": "language",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "key": "reportRequested",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Analysis/dictionary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis/dictionary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis",
+                "dictionary"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Analysis/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/Analysis/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/Analysis/{id}/process",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis/:id/process",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis",
+                ":id",
+                "process"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Analysis/{id}/report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis/:id/report",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis",
+                ":id",
+                "report"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/Analysis/{id}/send-report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis/:id/send-report",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis",
+                ":id",
+                "send-report"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"channel\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /api/Analysis/{id}/retry",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Analysis/:id/retry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Analysis",
+                ":id",
+                "retry"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit",
+      "item": [
+        {
+          "name": "GET /api/Audit/catalog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Audit/catalog",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Audit",
+                "catalog"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Audit/summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Audit/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Audit",
+                "summary"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Audit/logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Audit/logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Audit",
+                "logs"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "action",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "userId",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "success",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "from",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "to",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "pageSize",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/Audit/users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Audit/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Audit",
+                "users"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Audit/sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Audit/sessions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Audit",
+                "sessions"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "onlyOpen",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "userId",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/Audit/sessions/{id}/revoke",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Audit/sessions/:id/revoke",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Audit",
+                "sessions",
+                ":id",
+                "revoke"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/Audit/users/{id}/revoke-sessions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Audit/users/:id/revoke-sessions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Audit",
+                "users",
+                ":id",
+                "revoke-sessions"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "POST /api/Auth/register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "register"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"phone\": \"\",\n  \"birthDate\": \"\",\n  \"nickname\": \"\",\n  \"password\": \"\",\n  \"notificationMethod\": \"\",\n  \"photoOriginalBase64\": \"\",\n  \"photoModifiedBase64\": \"\",\n  \"recaptchaToken\": \"\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "POST /api/Auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "login"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"\",\n  \"recaptchaToken\": \"\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();",
+                  "const t = r.token || r.accessToken || (r.data && r.data.token);",
+                  "if (t) { pm.collectionVariables.set('token', t); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/Auth/facial",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/facial",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "facial"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"photoBase64\": \"\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();",
+                  "const t = r.token || r.accessToken || (r.data && r.data.token);",
+                  "if (t) { pm.collectionVariables.set('token', t); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/Auth/qr",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/qr",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "qr"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"qrCodeValue\": \"\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json();",
+                  "const t = r.token || r.accessToken || (r.data && r.data.token);",
+                  "if (t) { pm.collectionVariables.set('token', t); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/Auth/forgot-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "forgot-password"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "POST /api/Auth/reset-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "reset-password"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"\",\n  \"newPassword\": \"\"\n}"
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "POST /api/Auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "logout"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Auth/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "me"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Biometrics",
+      "item": [
+        {
+          "name": "POST /api/Biometrics/face",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Biometrics/face",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Biometrics",
+                "face"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/Biometrics/face",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Biometrics/face",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Biometrics",
+                "face"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/Biometrics/face/verify",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Biometrics/face/verify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Biometrics",
+                "face",
+                "verify"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/Biometrics/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Biometrics/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Biometrics",
+                "me"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CredentialDesign",
+      "item": [
+        {
+          "name": "GET /api/CredentialDesign",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "PUT /api/CredentialDesign",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"\",\n  \"backgroundColor\": \"\",\n  \"accentColor\": \"\",\n  \"textColor\": \"\",\n  \"photoStyle\": \"\",\n  \"qrStyle\": \"\",\n  \"decorations\": [\n    {\n      \"source\": null,\n      \"file\": null,\n      \"x\": null,\n      \"y\": null,\n      \"size\": null,\n      \"rotation\": null\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/CredentialDesign",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/CredentialDesign/preview",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign/preview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign",
+                "preview"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"template\": \"\",\n  \"backgroundColor\": \"\",\n  \"accentColor\": \"\",\n  \"textColor\": \"\",\n  \"photoStyle\": \"\",\n  \"qrStyle\": \"\",\n  \"decorations\": [\n    {\n      \"source\": null,\n      \"file\": null,\n      \"x\": null,\n      \"y\": null,\n      \"size\": null,\n      \"rotation\": null\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "GET /api/CredentialDesign/stickers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign/stickers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign",
+                "stickers"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/CredentialDesign/stickers",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign/stickers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign",
+                "stickers"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/CredentialDesign/stickers/mine/{file}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign/stickers/mine/:file",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign",
+                "stickers",
+                "mine",
+                ":file"
+              ],
+              "variable": [
+                {
+                  "key": "file",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/CredentialDesign/stickers/mine/{file}",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/CredentialDesign/stickers/mine/:file",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "CredentialDesign",
+                "stickers",
+                "mine",
+                ":file"
+              ],
+              "variable": [
+                {
+                  "key": "file",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Database",
+      "item": [
+        {
+          "name": "GET /api/Database/health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Database/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Database",
+                "health"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "EntityDictionary",
+      "item": [
+        {
+          "name": "GET /api/EntityDictionary/options",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/EntityDictionary/options",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "EntityDictionary",
+                "options"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/EntityDictionary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/EntityDictionary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "EntityDictionary"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "entityType",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "language",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "pageSize",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/EntityDictionary",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/EntityDictionary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "EntityDictionary"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": \"\",\n  \"canonicalValue\": \"\",\n  \"entityType\": \"\",\n  \"language\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/EntityDictionary/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/EntityDictionary/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "EntityDictionary",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /api/Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Health"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "GET /api/Profile/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile",
+                "me"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "PUT /api/Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"\",\n  \"nickname\": \"\",\n  \"notificationMethod\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/Profile/password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile/password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile",
+                "password"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"\",\n  \"newPassword\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /api/Profile/photo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile/photo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile",
+                "photo"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "original",
+                  "type": "file",
+                  "value": ""
+                },
+                {
+                  "key": "modified",
+                  "type": "file",
+                  "value": ""
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/Profile/photo/original",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile/photo/original",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile",
+                "photo",
+                "original"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Profile/photo/modified",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile/photo/modified",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile",
+                "photo",
+                "modified"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Profile/credential",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile/credential",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile",
+                "credential"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/Profile/credential/regenerate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Profile/credential/regenerate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Profile",
+                "credential",
+                "regenerate"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ProfileChangeRequests",
+      "item": [
+        {
+          "name": "POST /api/ProfileChangeRequests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ProfileChangeRequests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ProfileChangeRequests"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requestedEmail\": \"\",\n  \"requestedBirthDate\": \"\",\n  \"reason\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET /api/ProfileChangeRequests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ProfileChangeRequests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ProfileChangeRequests"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/ProfileChangeRequests/mine",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ProfileChangeRequests/mine",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ProfileChangeRequests",
+                "mine"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/ProfileChangeRequests/{id}/approve",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ProfileChangeRequests/:id/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ProfileChangeRequests",
+                ":id",
+                "approve"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /api/ProfileChangeRequests/{id}/reject",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ProfileChangeRequests/:id/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ProfileChangeRequests",
+                ":id",
+                "reject"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stats",
+      "item": [
+        {
+          "name": "GET /api/Stats/overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Stats/overview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Stats",
+                "overview"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stickers",
+      "item": [
+        {
+          "name": "GET /api/Stickers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Stickers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Stickers"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "GET /api/Stickers/image/{fileName}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Stickers/image/:fileName",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Stickers",
+                "image",
+                ":fileName"
+              ],
+              "variable": [
+                {
+                  "key": "fileName",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "GET /api/Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Users"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "POST /api/Users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Users"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"phone\": \"\",\n  \"birthDate\": \"\",\n  \"nickname\": \"\",\n  \"password\": \"\",\n  \"roleId\": 0,\n  \"notificationMethod\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET /api/Users/{id}",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "PUT /api/Users/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"phone\": \"\",\n  \"birthDate\": \"\",\n  \"nickname\": \"\",\n  \"notificationMethod\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/Users/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/Users/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/Users/{id}/role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Users/:id/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Users",
+                ":id",
+                "role"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "0"
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/Users/{id}/status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/Users/:id/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Users",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "false"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

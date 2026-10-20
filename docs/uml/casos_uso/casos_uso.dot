@@ -1,0 +1,69 @@
+digraph CU {
+  rankdir=LR; fontname="Arial"; node[fontname="Arial",fontsize=11]; edge[fontname="Arial",fontsize=9,color="#555555"];
+  newrank=true; nodesep=0.18; ranksep=1.1;
+  node[shape=none,width=0.6];
+  V [label=<<TABLE BORDER="0"><TR><TD><FONT POINT-SIZE="30">🧍</FONT></TD></TR><TR><TD>Visitante</TD></TR></TABLE>>];
+  A [label=<<TABLE BORDER="0"><TR><TD><FONT POINT-SIZE="30">🧍</FONT></TD></TR><TR><TD>ANALISTA</TD></TR></TABLE>>];
+  S [label=<<TABLE BORDER="0"><TR><TD><FONT POINT-SIZE="30">🧍</FONT></TD></TR><TR><TD>SUPERVISOR</TD></TR></TABLE>>];
+  D [label=<<TABLE BORDER="0"><TR><TD><FONT POINT-SIZE="30">🧍</FONT></TD></TR><TR><TD>ADMIN</TD></TR></TABLE>>];
+  SMTP [label=<<TABLE BORDER="0"><TR><TD><FONT POINT-SIZE="22">⚙</FONT></TD></TR><TR><TD>Correo (SMTP)</TD></TR></TABLE>>];
+  WA [label=<<TABLE BORDER="0"><TR><TD><FONT POINT-SIZE="22">⚙</FONT></TD></TR><TR><TD>WhatsApp (Twilio)</TD></TR></TABLE>>];
+  NLPA [label=<<TABLE BORDER="0"><TR><TD><FONT POINT-SIZE="22">⚙</FONT></TD></TR><TR><TD>Servicio NLP</TD></TR></TABLE>>];
+  S -> A [arrowhead=onormal, style=solid, label="hereda"];
+  D -> S [arrowhead=onormal, style=solid, label="hereda"];
+  subgraph cluster_sys {
+    label="Sistema Léxica (AutomatasFinal)"; style=rounded; color="#333333"; fontsize=14;
+    node[shape=ellipse, style=filled, fillcolor="#F2F2F2", color="#555555", width=2.6];
+    subgraph cluster_auth { label="Autenticación"; style=dashed; color="#999999";
+      CU01 [label="CU01 Registrarse\n(foto, filtros, stickers)"];
+      CU02 [label="CU02 Iniciar sesión\ncon contraseña"];
+      CU03 [label="CU03 Iniciar sesión\ncon rostro"];
+      CU04 [label="CU04 Iniciar sesión\ncon QR"];
+      CU05 [label="CU05 Recuperar\ncontraseña"];
+      CU06 [label="Validar reCAPTCHA"];
+      CU07 [label="Recibir credencial\nPDF con QR"];
+      CU08 [label="Cerrar sesión"];
+    }
+    subgraph cluster_perfil { label="Perfil"; style=dashed; color="#999999";
+      CU10 [label="CU10 Gestionar perfil\n(teléfono, nickname, notificación)"];
+      CU11 [label="CU11 Cambiar contraseña"];
+      CU12 [label="CU12 Cambiar foto"];
+      CU13 [label="CU13 Personalizar y\nregenerar credencial"];
+      CU14 [label="CU14 Solicitar cambio\nde correo / fecha"];
+    }
+    subgraph cluster_an { label="Análisis léxico"; style=dashed; color="#999999";
+      CU20 [label="CU20 Cargar archivo .txt\ny elegir idioma"];
+      CU21 [label="CU21 Procesar análisis"];
+      CU22 [label="CU22 Ver resultados"];
+      CU23 [label="CU23 Descargar reporte PDF"];
+      CU24 [label="CU24 Enviar reporte\n(correo / WhatsApp)"];
+      CU25 [label="CU25 Ver historial,\nreintentar o eliminar"];
+    }
+    subgraph cluster_sup { label="Supervisión"; style=dashed; color="#999999";
+      CU30 [label="CU30 Ver estadísticas"];
+      CU31 [label="CU31 Consultar usuarios"];
+    }
+    subgraph cluster_adm { label="Administración"; style=dashed; color="#999999";
+      CU40 [label="CU40 Gestionar usuarios\n(crear, editar, eliminar)"];
+      CU41 [label="CU41 Cambiar rol"];
+      CU42 [label="CU42 Activar / desactivar\nusuario"];
+      CU43 [label="CU43 Aprobar / rechazar\nsolicitudes"];
+      CU44 [label="CU44 Consultar bitácora\nde auditoría"];
+      CU45 [label="CU45 Revocar sesiones"];
+      CU46 [label="CU46 Parametrizar diccionario\nde entidades"];
+    }
+  }
+  edge[arrowhead=none];
+  V -> {CU01 CU02 CU03 CU04 CU05};
+  A -> {CU08 CU10 CU11 CU12 CU13 CU14 CU20 CU22 CU23 CU24 CU25};
+  S -> {CU30 CU31};
+  D -> {CU40 CU41 CU42 CU43 CU44 CU45 CU46};
+  edge[style=dashed, arrowhead=vee, fontcolor="#333333"];
+  CU01 -> CU06 [label="«include»"]; CU02 -> CU06 [label="«include»"];
+  CU01 -> CU07 [label="«include»"];
+  CU20 -> CU21 [label="«include»"];
+  CU42 -> CU45 [label="«include» (al desactivar)"];
+  CU24 -> CU23 [label="«include»"];
+  edge[style=solid, arrowhead=none, color="#888888"];
+  CU07 -> SMTP; CU05 -> SMTP; CU24 -> SMTP; CU24 -> WA; CU05 -> WA; CU21 -> NLPA;
+}

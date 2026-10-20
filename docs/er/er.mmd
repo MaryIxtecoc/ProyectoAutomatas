@@ -1,0 +1,149 @@
+erDiagram
+    roles ||--o{ users : "asigna rol"
+    users ||--o| user_biometrics : "descriptor facial"
+    users ||--o{ user_credentials : "credenciales QR"
+    users ||--o{ credential_designs : "diseña"
+    users ||--o{ profile_change_requests : "solicita"
+    users |o--o{ profile_change_requests : "revisa (reviewed_by)"
+    users ||--o{ password_reset_tokens : "restablece"
+    users ||--o{ user_sessions : "inicia sesión"
+    users |o--o{ user_sessions : "revoca (revoked_by)"
+    users ||--o{ analysis_jobs : "carga archivos"
+    analysis_jobs ||--o| analysis_results : "produce"
+    users |o--o{ audit_logs : "realiza (user_id)"
+    users |o--o{ audit_logs : "afecta (target_user_id)"
+
+    roles {
+        smallint id PK "IDENTITY"
+        text code UK "ADMIN, SUPERVISOR, ANALISTA"
+        text name
+        text description
+        timestamptz created_at
+    }
+    users {
+        uuid id PK
+        citext email UK
+        text phone
+        date birth_date
+        citext nickname UK
+        text password_hash "hash PBKDF2"
+        smallint role_id FK
+        notification_method notification_method "email, whatsapp, both"
+        text photo_original_path
+        text photo_modified_path
+        boolean is_active
+        timestamptz deleted_at "borrado lógico"
+        timestamptz created_at
+        timestamptz updated_at
+        timestamptz last_login_at
+    }
+    user_biometrics {
+        uuid user_id PK, FK
+        jsonb face_descriptor "vector SFace"
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    user_credentials {
+        uuid id PK
+        uuid user_id FK "1 activa por usuario"
+        text qr_code_value UK "sha256 del secreto QR"
+        text pdf_path
+        boolean is_active
+        timestamptz issued_at
+    }
+    credential_designs {
+        uuid id PK
+        uuid user_id FK
+        varchar template
+        varchar background_color
+        varchar accent_color
+        varchar text_color
+        varchar photo_style
+        varchar qr_style
+        jsonb decorations
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    profile_change_requests {
+        uuid id PK
+        uuid user_id FK
+        varchar requested_email
+        date requested_birth_date
+        text reason
+        varchar status "PENDING, APPROVED, REJECTED"
+        uuid reviewed_by FK
+        timestamptz reviewed_at
+        timestamptz created_at
+    }
+    password_reset_tokens {
+        uuid id PK
+        uuid user_id FK
+        text token_hash UK
+        timestamptz expires_at
+        timestamptz used_at
+        inet requested_ip
+        timestamptz created_at
+    }
+    user_sessions {
+        uuid id PK
+        uuid user_id FK
+        text login_method "PASSWORD, FACE, QR, REGISTER"
+        inet ip_address
+        text user_agent
+        timestamptz created_at
+        timestamptz last_seen_at
+        timestamptz expires_at
+        timestamptz revoked_at
+        uuid revoked_by FK
+        text revoke_reason
+    }
+    analysis_jobs {
+        uuid id PK
+        uuid user_id FK
+        text file_name
+        text file_storage_path
+        analysis_language language "ES, EN, RU, ZH, AR"
+        analysis_status status "PENDING, PROCESSING, COMPLETED, FAILED"
+        boolean report_requested
+        text report_pdf_path
+        text error_message
+        timestamptz uploaded_at
+        timestamptz processed_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    analysis_results {
+        uuid id PK
+        uuid job_id FK, UK
+        integer total_word_count
+        jsonb most_frequent_words
+        jsonb least_frequent_words
+        jsonb personal_pronouns
+        jsonb person_names
+        jsonb root_nouns
+        jsonb root_verbs
+        jsonb other_classifications
+        jsonb full_result
+        timestamptz created_at
+    }
+    entity_dictionary {
+        uuid id PK
+        text value
+        text normalized_value
+        text canonical_value
+        text entity_type "PERSON, COUNTRY, CITY, ORGANIZATION..."
+        text language
+        text source
+        timestamptz created_at
+    }
+    audit_logs {
+        bigint id PK "IDENTITY"
+        uuid user_id FK
+        uuid target_user_id FK
+        text action
+        jsonb details
+        inet ip_address
+        text user_agent
+        boolean success
+        timestamptz created_at
+    }

@@ -1,363 +1,134 @@
-# ProyectoAutomatas
-Proyecto de analizador lexico
-<div align="center">
+# Léxica — AutomatasFinal
 
-# 🔤 Plataforma de Análisis Léxico — Frontend
+Plataforma web de análisis léxico de documentos `.txt` en español, inglés, ruso, chino y árabe.
+Proyecto final del curso **Lenguajes Formales y Autómatas** (2026).
 
-**Proyecto Final · Lenguajes Formales y Autómatas · 2026**
+## Funcionalidades
 
-![Nuxt](https://img.shields.io/badge/Nuxt-3-00DC82?logo=nuxtdotjs&logoColor=white)
-![Vue](https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white)
-![Vuetify](https://img.shields.io/badge/Vuetify-3-1867C0?logo=vuetify&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
+- **Registro** con fotografía, reconocimiento facial (recorte de rostro), filtros y stickers.
+- **Credencial PDF con QR** enviada al registrarse; diseño personalizable por el usuario.
+- **Inicio de sesión** con contraseña, con rostro (YuNet + SFace) o con el QR de la credencial.
+- **Recuperación de contraseña** por correo o WhatsApp.
+- **Análisis léxico**: total de palabras, más/menos frecuentes, pronombres, nombres propios,
+  sustantivos y verbos en forma raíz, y otras clasificaciones. Reporte PDF por correo/WhatsApp.
+- **Roles**: ADMIN (usuarios, parametrización, auditoría, solicitudes), SUPERVISOR (estadísticas)
+  y ANALISTA (análisis y perfil).
+- **Seguridad**: JWT con sesiones revocables, reCAPTCHA, contraseñas con hash, secreto del QR
+  guardado como hash, RLS en la base de datos y bitácora de auditoría (quién, qué, cuándo, IP).
 
-Aplicación web pública que permite registrarse, iniciar sesión (usuario/contraseña, rostro o QR) y cargar archivos `.txt` para realizar un **análisis léxico** en español, inglés, ruso, chino y árabe.
-
-[Sitio en producción](https://[tu-dominio]) · [Manual de usuario](docs/MANUAL_DE_USUARIO.docx) · [Diagramas de flujo](#-diagramas-de-flujo)
-
-</div>
-
----
-
-## 📑 Tabla de contenido
-
-1. [Entregables cubiertos](#-entregables-cubiertos)
-2. [Tecnologías](#-tecnologías)
-3. [Estructura del repositorio](#-estructura-del-repositorio)
-4. [Guía para compilar el frontend](#-guía-para-compilar-el-frontend)
-5. [Ejecución con Docker](#-ejecución-con-docker)
-6. [Diagramas de flujo](#-diagramas-de-flujo)
-7. [Manual de usuario](#-manual-de-usuario)
-8. [Archivo de análisis](#-archivo-de-análisis)
-9. [Seguridad](#-seguridad)
-10. [Equipo](#-equipo)
-
----
-
-
-
-## 🧰 Tecnologías
+## Tecnologías
 
 | Capa | Tecnología |
-|------|------------|
-| Framework | Nuxt 3 |
-| UI | Vue 3 + Vuetify 3 |
-| Lenguajes | TypeScript, JavaScript, HTML, CSS |
-| Seguridad | JWT, Google reCAPTCHA, HTTPS (SSL) |
-| Contenedores | Docker |
-| Navegadores soportados | Google Chrome, Mozilla Firefox, Microsoft Edge |
+|---|---|
+| Frontend | Nuxt 4 · Vue 3 · TypeScript |
+| Backend | .NET 8 (ASP.NET Core Web API) · Entity Framework Core · Clean Architecture |
+| Base de datos | PostgreSQL (Supabase) |
+| Archivos | Supabase Storage (buckets privados) |
+| Biometría | OpenCvSharp 4 · YuNet (detección) · SFace (reconocimiento) |
+| PDF / QR | QuestPDF · QRCoder |
+| Notificaciones | SMTP (MailKit) · Twilio WhatsApp |
+| Contenedores | Docker · Docker Compose |
+| Pruebas | xUnit |
 
-> Backend: .NET 8 (C#) · Base de datos: [MySQL / SQL Server / Oracle]. Ver repositorio [`[nombre-repo-backend]`](https://github.com/[usuario]/[repo-backend]).
+## Estructura
 
----
-
-## 📂 Estructura del repositorio
-
-```text
-.
-├── assets/                  # Estilos globales e imágenes
-├── components/              # Componentes Vue reutilizables
-├── composables/             # Lógica reutilizable (cámara, auth, API)
-├── layouts/                 # Plantillas de página
-├── middleware/              # Protección de rutas (JWT / roles)
-├── pages/                   # Pantallas: registro, login, análisis, perfil
-├── plugins/                 # Vuetify, reCAPTCHA
-├── services/                # Consumo de la API (backend)
-├── docs/
-│   ├── MANUAL_DE_USUARIO.docx
-│   ├── analisis/            # Archivo de análisis (1.1.2.8)
-│   └── diagramas/           # Exportados de Bizagi (.bpm y .png)
-├── .env.example             # Plantilla de variables de entorno
-├── Dockerfile
-├── instalar-dependencias.bat
-├── nuxt.config.ts
-├── package.json
-└── README.md
+```
+backend/
+  AutomatasFinal.Domain/          Entidades
+  AutomatasFinal.Application/     DTOs y reglas compartidas
+  AutomatasFinal.Infrastructure/  Servicios, EF Core, biometría, PDF, notificaciones
+  AutomatasFinal.API/             Controladores y configuración
+  AutomatasFinal.Tests/           Pruebas unitarias (xUnit)
+frontend/                         Aplicación Nuxt (app/pages, app/components)
+database/database.sql             Esquema completo, seguridad y datos iniciales
+docker/                           Dockerfiles de backend y frontend
+postman/collection.json           Colección de la API
 ```
 
----
+## Requisitos
 
-## 🛠 Guía para compilar el frontend
+- .NET SDK 8
+- Node.js 22 o superior
+- Un proyecto de Supabase (PostgreSQL + Storage)
+- Docker (opcional)
 
-Pasos completos **desde clonar el repositorio hasta compilar**.
+## Puesta en marcha
 
-### 1. Requisitos previos
+### 1. Base de datos
 
-| Herramienta | Versión recomendada | Verificar |
-|-------------|--------------------|-----------|
-| Git | 2.40+ | `git --version` |
-| Node.js | 20 LTS o superior | `node -v` |
-| npm | 10+ | `npm -v` |
-| Docker *(opcional)* | 24+ | `docker --version` |
+En Supabase → **SQL Editor**, ejecutar completo `database/database.sql`. Crea tablas, funciones,
+seguridad (RLS), datos iniciales y los buckets privados de Storage. Los stickers del sistema
+se suben a `stickers/global/`.
 
-### 2. Clonar el repositorio
-
-El repositorio es **privado**: debes tener acceso concedido y estar autenticado en GitHub.
+### 2. Variables de entorno
 
 ```bash
-git clone https://github.com/[usuario]/[repo-frontend].git
-cd [repo-frontend]
+cp .env.example .env      # Windows: copy .env.example .env
 ```
 
-### 3. Instalar dependencias
+Llenar `.env`. La cadena de conexión debe ser la de **Session pooler** de Supabase
+(Project Settings → Database), que funciona por IPv4.
 
-**Opción A: script automático (Windows)**
-
-Haz doble clic en `instalar-dependencias.bat` (o ejecútalo desde la terminal):
-
-```bat
-instalar-dependencias.bat
-```
-
-**Opción B: manual (cualquier sistema)**
+Cargar los valores en el backend:
 
 ```bash
-npm install
+./configurar-secretos.sh          # Linux / macOS
+.\configurar-secretos.ps1         # Windows (PowerShell)
 ```
 
-### 4. Configurar variables de entorno
+Frontend: crear `frontend/.env` con `NUXT_PUBLIC_API_URL=http://localhost:5000/api`.
+
+### 3. Ejecutar
 
 ```bash
-# Linux / macOS
-cp .env.example .env
-
-# Windows (CMD)
-copy .env.example .env
+cd frontend && npm install && cd ..
+./iniciar.sh                      # Linux
+iniciar-todo.bat                  # Windows
 ```
 
-Edita `.env` con tus valores:
+| Servicio | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| API | http://localhost:5000/api |
+| Swagger (desarrollo) | http://localhost:5000/swagger |
 
-| Variable | Descripción | Ejemplo |
-|----------|-------------|---------|
-| `NUXT_PUBLIC_API_BASE` | URL base del backend (HTTPS) | `https://api.[tu-dominio]/api` |
-| `NUXT_PUBLIC_RECAPTCHA_SITE_KEY` | Clave pública de reCAPTCHA | `6Lc...` |
-
-> ⚠️ **Nunca** subas el archivo `.env` al repositorio. Está incluido en `.gitignore`.
-
-### 5. Ejecutar en modo desarrollo
+### Con Docker
 
 ```bash
-npm run dev
+docker compose up --build
 ```
 
-Abre <http://localhost:3000> en tu navegador.
+Frontend en http://localhost:3000 y API en http://localhost:8080/api (lee `.env`).
 
-### 6. Compilar para producción
+## Pruebas
 
 ```bash
-npm run build
+cd backend
+dotnet test
 ```
 
-### 7. Probar la compilación localmente
+Cubren la política de contraseñas, el hash del QR, la validación del diseño de credencial,
+el analizador léxico y el reconocimiento facial con fotografías de prueba.
 
-```bash
-npm run preview
-```
+## API
 
-### 8. Comandos disponibles
+- Swagger en desarrollo: `/swagger`.
+- Postman: importar `postman/collection.json`, ajustar `baseUrl` y ejecutar
+  `Auth > POST /api/Auth/login` (el token se guarda automáticamente).
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm run dev` | Servidor de desarrollo con recarga en caliente |
-| `npm run build` | Compilación optimizada para producción |
-| `npm run preview` | Vista previa de la compilación |
-| `npm run generate` | Genera sitio estático *(si aplica)* |
+## Despliegue
 
-### 9. Solución de problemas
+- **Frontend**: Vercel (directorio raíz `frontend`, variable `NUXT_PUBLIC_API_URL`).
+- **Backend**: cualquier servicio con Docker (por ejemplo Render), usando
+  `docker/backend/Dockerfile` con contexto `backend` y puerto `8080`.
+- Variables del backend en producción (formato `Seccion__Clave`):
+  `ConnectionStrings__DefaultConnection`, `Jwt__Key`, `Jwt__Issuer`, `Jwt__Audience`,
+  `Jwt__ExpirationMinutes`, `Supabase__Url`, `Supabase__SecretKey`, `App__FrontendBaseUrl`,
+  `Cors__AllowedOrigins`, `ForwardedHeaders__TrustAllProxies=true`, `Smtp__*`, `Twilio__*`,
+  `Recaptcha__SecretKey`.
 
-| Problema | Solución |
-|----------|----------|
-| `node` no se reconoce como comando | Instala Node.js 20 LTS y reinicia la terminal |
-| Error de permisos en `npm install` | Ejecuta la terminal como administrador o limpia con `npm cache clean --force` |
-| Puerto 3000 ocupado | Ejecuta `npm run dev -- --port 3001` |
-| La cámara no funciona | La cámara requiere HTTPS o `localhost`; permite el acceso en el navegador |
-| Error de conexión con la API | Verifica `NUXT_PUBLIC_API_BASE` y que el backend esté en ejecución |
+## Seguridad
 
----
-
-## 🐳 Ejecución con Docker
-
-```bash
-# Construir la imagen
-docker build -t analisis-lexico-frontend .
-
-# Ejecutar el contenedor
-docker run -d -p 3000:3000 --env-file .env --name frontend analisis-lexico-frontend
-```
-
-Aplicación disponible en <http://localhost:3000>.
-
-Ejemplo de `Dockerfile`:
-
-```dockerfile
-FROM node:20-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=build /app/.output ./.output
-ENV HOST=0.0.0.0 PORT=3000
-EXPOSE 3000
-CMD ["node", ".output/server/index.mjs"]
-```
-
----
-
-## 🔀 Diagramas de flujo
-
-Los diagramas fueron elaborados en **Bizagi Modeler**. Los archivos originales (`.bpm`) y sus exportaciones (`.png`) están en [`/docs/diagramas/`](docs/diagramas/). A continuación, una vista rápida de cada proceso.
-
-| Proceso | Archivo Bizagi |
-|---------|----------------|
-| Registro de usuario | `docs/diagramas/01-registro.bpm` |
-| Login (3 formas) | `docs/diagramas/02-login.bpm` |
-| Análisis léxico | `docs/diagramas/03-analisis.bpm` |
-| Recuperar contraseña | `docs/diagramas/04-recuperar-password.bpm` |
-
-### 1. Registro de usuario
-
-```mermaid
-flowchart TD
-    A([Inicio]) --> B["Abrir formulario de registro"]
-    B --> C["Ingresar correo, teléfono, fecha de nacimiento, nickname y contraseña"]
-    C --> D["Elegir método de notificación: correo, WhatsApp o ambos"]
-    D --> E["Resolver reCAPTCHA"]
-    E --> F["Tomar fotografía"]
-    F --> G{"¿Rostro detectado?"}
-    G -- No --> F
-    G -- Sí --> H["Recortar rostro"]
-    H --> I["Aplicar filtros o stickers"]
-    I --> J["Enviar datos al backend"]
-    J --> K{"¿Datos válidos y usuario nuevo?"}
-    K -- No --> L["Mostrar error claro"]
-    L --> C
-    K -- Sí --> M["Guardar usuario con rol Analista"]
-    M --> N["Generar credencial PDF con QR"]
-    N --> O["Enviar credencial por el medio elegido"]
-    O --> P([Fin])
-```
-
-### 2. Login (tres formas)
-
-```mermaid
-flowchart TD
-    A([Inicio]) --> B{"Método de acceso"}
-    B -- "Usuario y contraseña" --> C["Ingresar nickname y contraseña"]
-    C --> D["Resolver reCAPTCHA"]
-    B -- "Reconocimiento facial" --> E["Ingresar nickname y activar cámara"]
-    E --> F["Capturar rostro"]
-    B -- "Código QR" --> G["Activar cámara"]
-    G --> H["Escanear QR de la credencial"]
-    D --> I["Enviar al backend"]
-    F --> I
-    H --> I
-    I --> J{"¿Credenciales válidas?"}
-    J -- No --> K["Mostrar error y registrar intento en bitácora"]
-    K --> B
-    J -- Sí --> L["Recibir token JWT"]
-    L --> M["Registrar acceso: quién, cuándo, IP"]
-    M --> N["Redirigir al panel según rol"]
-    N --> O([Fin])
-```
-
-### 3. Análisis léxico
-
-```mermaid
-flowchart TD
-    A([Inicio]) --> B["Usuario autenticado en el panel"]
-    B --> C["Seleccionar archivo .txt"]
-    C --> D{"¿Formato .txt válido?"}
-    D -- No --> E["Mostrar error"]
-    E --> C
-    D -- Sí --> F["Seleccionar idioma: ES, EN, RU, ZH o AR"]
-    F --> G["Clic en Procesar"]
-    G --> H["Enviar archivo e idioma al backend"]
-    H --> I["Análisis léxico"]
-    I --> J["Mostrar resultados: total de palabras, más y menos repetidas, pronombres, nombres, sustantivos, verbos y otras clasificaciones"]
-    J --> K{"¿Desea reporte PDF?"}
-    K -- Sí --> L["Enviar PDF por correo o WhatsApp"]
-    K -- No --> M([Fin])
-    L --> M
-```
-
-### 4. Recuperar contraseña
-
-```mermaid
-flowchart TD
-    A([Inicio]) --> B["Clic en: ¿Olvidó su contraseña?"]
-    B --> C["Ingresar correo o nickname"]
-    C --> D["Resolver reCAPTCHA"]
-    D --> E["Solicitar restablecimiento al backend"]
-    E --> F["Generar enlace temporal"]
-    F --> G["Notificar por correo, WhatsApp o ambos"]
-    G --> H["Usuario abre el enlace"]
-    H --> I{"¿Enlace vigente?"}
-    I -- No --> J["Mostrar enlace expirado"]
-    J --> B
-    I -- Sí --> K["Ingresar y confirmar nueva contraseña"]
-    K --> L["Guardar contraseña cifrada"]
-    L --> M([Fin])
-```
-
----
-
-## 📘 Manual de usuario
-
-El manual con capturas de cada pantalla está disponible en formato Word:
-
-👉 **[Descargar MANUAL_DE_USUARIO.docx](docs/MANUAL_DE_USUARIO.docx)**
-
-Incluye: acceso al sitio, registro, personalización de fotografía, credencial con QR, login (usuario/contraseña, rostro y QR), recuperación de contraseña, análisis léxico, reporte PDF y gestión de perfil.
-
----
-
-## 🗂 Archivo de análisis
-
-Documento de análisis del proyecto (requerimientos, alcance y decisiones de diseño):
-
-👉 [`/docs/analisis/`](docs/analisis/)
-
----
-
-## 🔐 Seguridad
-
-- Comunicación cifrada con **HTTPS/TLS**.
-- Autenticación con **JWT** para el consumo de endpoints.
-- **reCAPTCHA** en registro, login y recuperación de contraseña.
-- Validación y sanitización de entradas (prevención de XSS e inyección).
-- Variables de entorno fuera del repositorio (`.env` ignorado por Git).
-- Mensajes de error claros sin exponer información sensible.
-- Buenas prácticas basadas en **OWASP**.
-
----
-
-## 🎨 Diseño y compatibilidad
-
-- Regla de color **60-30-10** (dominante, secundario y acento).
-- Diseño responsivo: escritorio, laptop, tablet y móviles Android/iOS.
-- Compatible con Chrome, Firefox y Edge.
-- Interfaz en idioma español.
-
----
-
-## 👥 Equipo
-
-| Integrante | Rol | GitHub |
-|------------|-----|--------|
-| [Nombre 1] | [Backend] | [@usuario1](https://github.com/usuario1) |
-| [Nombre 2] | [Base de datos] | [@usuario2](https://github.com/usuario2) |
-| [Nombre 3] | Frontend, flujos y usuario | [@usuario3](https://github.com/usuario3) |
-| [Nombre 4] | [Infraestructura / Docker] | [@usuario4](https://github.com/usuario4) |
-
-**Catedrático:** [Nombre] · **Curso:** Lenguajes Formales y Autómatas · **Universidad Mariano Gálvez**
-
----
-
-<div align="center">
-Hecho con 💙 por el grupo [número] · 2026
-</div>
+- Nunca subir `.env`, `frontend/.env` ni respaldos `.zip` (están en `.gitignore`).
+- Todas las tablas tienen RLS; el backend es el único que accede a los datos.
+- Los archivos se sirven a través del backend con JWT; los buckets son privados.
