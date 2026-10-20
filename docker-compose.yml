@@ -1,0 +1,60 @@
+# Uso:
+#   1) cp .env.example .env   y llena los valores reales (no subas .env a git)
+#   2) docker compose up --build
+#
+# No se levanta un contenedor de Postgres aparte: el backend se conecta
+# directo a la base de Supabase (DB_CONNECTION_STRING), igual que en local.
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION_STRING}
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: AutomatasFinal.API
+      Jwt__Audience: AutomatasFinal.Client
+      Jwt__ExpirationMinutes: "60"
+      Supabase__Url: ${SUPABASE_URL}
+      Supabase__SecretKey: ${SUPABASE_SECRET_KEY}
+      App__FrontendBaseUrl: ${FRONTEND_BASE_URL:-http://localhost:3000}
+      Cors__AllowedOrigins: ${CORS_ALLOWED_ORIGINS:-}
+      Smtp__Host: ${SMTP_HOST}
+      Smtp__Port: ${SMTP_PORT:-587}
+      Smtp__User: ${SMTP_USER}
+      Smtp__Password: ${SMTP_PASSWORD}
+      Smtp__FromEmail: ${SMTP_FROM_EMAIL}
+      Smtp__FromName: ${SMTP_FROM_NAME:-AutomatasFinal}
+      Twilio__AccountSid: ${TWILIO_ACCOUNT_SID}
+      Twilio__AuthToken: ${TWILIO_AUTH_TOKEN}
+      Twilio__WhatsAppFrom: ${TWILIO_WHATSAPP_FROM}
+      Recaptcha__SecretKey: ${RECAPTCHA_SECRET_KEY}
+      NlpService__BaseUrl: ${NLP_SERVICE_URL:-http://nlp:8000}
+    depends_on:
+      - nlp
+    restart: unless-stopped
+
+  # Análisis lingüístico con spaCy (ES/EN/RU/ZH) y Stanza (AR).
+  # Si este servicio no responde, el backend usa su analizador propio.
+  nlp:
+    build:
+      context: ./nlp-service
+    environment:
+      NLP_MAX_LOADED_MODELS: "2"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NUXT_PUBLIC_API_URL: ${FRONTEND_API_URL:-http://localhost:8080/api}
+      NUXT_PUBLIC_RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI}
+    depends_on:
+      - backend
+    restart: unless-stopped

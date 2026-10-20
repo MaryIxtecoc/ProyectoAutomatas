@@ -38,8 +38,8 @@ public class NotificationService : INotificationService
             "<p>Puedes usarla para iniciar sesión leyendo el QR desde la página de login.</p>";
 
         var whatsAppBody =
-            $"Hola {user.Nickname}, tu credencial de AutomatasFinal ya está lista. " +
-            "Te la adjuntamos en PDF. También puedes usarla para iniciar sesión leyendo su código QR.";
+            $"¡Bienvenido/a a Léxica, {user.Nickname}! 🎉 Tu registro quedó listo. " +
+            "Te adjuntamos tu credencial en PDF; puedes usarla para iniciar sesión leyendo su código QR.";
 
         return SendByUserChannelAsync(
             user,
