@@ -14,6 +14,7 @@ public static class PhonePolicy
 {
     public const int MinDigits = 8;
     public const int MaxDigits = 15; // máximo internacional (E.164)
+    public const int MaxLength = 20;
 
     private static readonly Regex AllowedFormat =
         new(@"^\+?[0-9]+([ -][0-9]+)*$", RegexOptions.Compiled);
@@ -35,6 +36,12 @@ public static class PhonePolicy
         {
             throw new ArgumentException(
                 "El teléfono solo puede contener números (se permite + al inicio, espacios o guiones).");
+        }
+
+        if (value.Length > MaxLength)
+        {
+            throw new ArgumentException(
+                $"El teléfono no puede superar {MaxLength} caracteres.");
         }
 
         var digits = value.Count(char.IsAsciiDigit);

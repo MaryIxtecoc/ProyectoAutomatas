@@ -76,11 +76,7 @@ public class ProfileService
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(request.Nickname))
-        {
-            throw new ArgumentException(
-                "El nickname es obligatorio.");
-        }
+        var nickname = FieldLimits.NormalizeNickname(request.Nickname);
 
         var phone = PhonePolicy.Normalize(request.Phone);
 
@@ -95,7 +91,7 @@ public class ProfileService
 
         var nicknameExists = await _db.Users
             .AnyAsync(x =>
-                x.Nickname == request.Nickname.Trim() &&
+                x.Nickname == nickname &&
                 x.Id != userId);
 
         if (nicknameExists)
@@ -106,11 +102,11 @@ public class ProfileService
 
         var changes = new List<object>();
 
-        AddChange(changes, "nickname", user.Nickname, request.Nickname.Trim());
+        AddChange(changes, "nickname", user.Nickname, nickname);
         AddChange(changes, "phone", user.Phone, phone);
         AddChange(changes, "notificationMethod", user.NotificationMethod.ToString(), notificationMethod.ToString());
 
-        user.Nickname = request.Nickname.Trim();
+        user.Nickname = nickname;
         user.Phone = phone;
         user.NotificationMethod = notificationMethod;
         user.UpdatedAt = DateTime.UtcNow;

@@ -62,13 +62,13 @@ public class UserService
             throw new ArgumentException(
                 "El correo electrónico es obligatorio.");
 
+        FieldLimits.EnsureEmailLength(email);
+
         PasswordPolicy.Validate(request.Password);
 
         var phone = PhonePolicy.Normalize(request.Phone);
 
-        if (string.IsNullOrWhiteSpace(request.Nickname))
-            throw new ArgumentException(
-                "El nombre de usuario es obligatorio.");
+        var nickname = FieldLimits.NormalizeNickname(request.Nickname);
 
         var exists = await _db.Users
             .AnyAsync(x => x.Email == email);
@@ -103,7 +103,7 @@ public class UserService
             Email = email,
             Phone = phone,
             BirthDate = request.BirthDate,
-            Nickname = request.Nickname.Trim(),
+            Nickname = nickname,
             PasswordHash = _passwordService.HashPassword(
                 request.Password),
             RoleId = request.RoleId,
@@ -150,7 +150,11 @@ public class UserService
             .Trim()
             .ToLowerInvariant();
 
+        FieldLimits.EnsureEmailLength(email);
+
         var updatedPhone = PhonePolicy.Normalize(request.Phone);
+
+        var nickname = FieldLimits.NormalizeNickname(request.Nickname);
 
         var emailExists = await _db.Users
             .AnyAsync(x =>
@@ -177,13 +181,13 @@ public class UserService
         AddChange(changes, "email", user.Email, email);
         AddChange(changes, "phone", user.Phone, updatedPhone);
         AddChange(changes, "birthDate", user.BirthDate.ToString("yyyy-MM-dd"), request.BirthDate.ToString("yyyy-MM-dd"));
-        AddChange(changes, "nickname", user.Nickname, request.Nickname.Trim());
+        AddChange(changes, "nickname", user.Nickname, nickname);
         AddChange(changes, "notificationMethod", user.NotificationMethod.ToString(), notificationMethod.ToString());
 
         user.Email = email;
         user.Phone = updatedPhone;
         user.BirthDate = request.BirthDate;
-        user.Nickname = request.Nickname.Trim();
+        user.Nickname = nickname;
         user.NotificationMethod = notificationMethod;
         user.UpdatedAt = DateTime.UtcNow;
 

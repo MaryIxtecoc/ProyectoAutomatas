@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using AutomatasFinal.Application.Analysis;
+using AutomatasFinal.Application.Security;
 using AutomatasFinal.Domain.Entities;
 using AutomatasFinal.Infrastructure.Data;
 using AutomatasFinal.Infrastructure.Notifications;
@@ -86,6 +87,8 @@ public class AnalysisService
             throw new ArgumentException(
                 "El archivo no puede superar los 5 MB.");
         }
+
+        FieldLimits.EnsureFileNameLength(Path.GetFileName(file.FileName));
 
         var userExists = await _db.Users
             .AnyAsync(x =>
