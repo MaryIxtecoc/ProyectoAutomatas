@@ -185,6 +185,57 @@ public class AnalysisController : ControllerBase
         });
     }
 
+    // Devuelve el texto del archivo original para mostrarlo como vista previa
+    // en la página de resultados.
+    [HttpGet("{id:guid}/file")]
+    public async Task<IActionResult> GetOriginalFile(Guid id)
+    {
+        var userIdClaim = User.FindFirst(
+            ClaimTypes.NameIdentifier)?.Value;
+
+        if (!Guid.TryParse(userIdClaim, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var job = await _analysisService.GetByIdAsync(
+            id,
+            userId);
+
+        if (job is null)
+        {
+            return NotFound(new
+            {
+                message = "Análisis no encontrado."
+            });
+        }
+
+        if (string.IsNullOrWhiteSpace(job.FileStoragePath))
+        {
+            return NotFound(new
+            {
+                message = "El archivo original no está disponible."
+            });
+        }
+
+        try
+        {
+            var bytes = await _analysisService.DownloadOriginalFileAsync(job);
+
+            return File(
+                bytes,
+                "text/plain; charset=utf-8",
+                job.FileName);
+        }
+        catch (Exception)
+        {
+            return NotFound(new
+            {
+                message = "El archivo original no está disponible."
+            });
+        }
+    }
+
     [HttpPost("{id:guid}/process")]
     public async Task<IActionResult> Process(Guid id)
     {
