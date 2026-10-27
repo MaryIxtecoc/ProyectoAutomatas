@@ -72,7 +72,10 @@ CREATE TABLE public.users (
     last_login_at timestamp with time zone,
     CONSTRAINT users_birth_date_sane_chk CHECK ((birth_date > '1900-01-01'::date)),
     CONSTRAINT users_email_format_chk CHECK ((email OPERATOR(public.~*) '^[^@\s]+@[^@\s]+\.[^@\s]+$'::public.citext)),
-    CONSTRAINT users_phone_not_blank_chk CHECK ((length(TRIM(BOTH FROM phone)) > 0))
+    CONSTRAINT users_phone_not_blank_chk CHECK ((length(TRIM(BOTH FROM phone)) > 0)),
+    CONSTRAINT users_nickname_len_chk CHECK ((char_length(nickname) BETWEEN 3 AND 30)),
+    CONSTRAINT users_email_len_chk CHECK ((char_length(email) <= 254)),
+    CONSTRAINT users_phone_len_chk CHECK ((char_length(phone) <= 20))
 );
 
 -- Descriptor facial (SFace) para el login facial
@@ -118,7 +121,8 @@ CREATE TABLE public.profile_change_requests (
     status character varying(20) DEFAULT 'PENDING'::character varying NOT NULL,
     reviewed_by uuid,
     reviewed_at timestamp with time zone,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT profile_change_reason_len_chk CHECK ((char_length(reason) <= 500))
 );
 
 -- Tokens de restablecimiento (solo hash)
@@ -162,7 +166,8 @@ CREATE TABLE public.analysis_jobs (
     processed_at timestamp with time zone,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT analysis_jobs_processed_after_upload_chk CHECK (((processed_at IS NULL) OR (processed_at >= uploaded_at)))
+    CONSTRAINT analysis_jobs_processed_after_upload_chk CHECK (((processed_at IS NULL) OR (processed_at >= uploaded_at))),
+    CONSTRAINT analysis_jobs_file_name_len_chk CHECK ((char_length(file_name) <= 255))
 );
 
 -- Resultado del análisis léxico
@@ -192,7 +197,9 @@ CREATE TABLE public.entity_dictionary (
     language text,
     source text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT entity_dictionary_type_check CHECK ((entity_type = ANY (ARRAY['PERSON'::text, 'COUNTRY'::text, 'CITY'::text, 'ORGANIZATION'::text, 'BRAND'::text, 'PRODUCT'::text, 'LOCATION'::text])))
+    CONSTRAINT entity_dictionary_type_check CHECK ((entity_type = ANY (ARRAY['PERSON'::text, 'COUNTRY'::text, 'CITY'::text, 'ORGANIZATION'::text, 'BRAND'::text, 'PRODUCT'::text, 'LOCATION'::text]))),
+    CONSTRAINT entity_dictionary_value_len_chk CHECK ((char_length(value) BETWEEN 1 AND 80)),
+    CONSTRAINT entity_dictionary_canonical_len_chk CHECK (((canonical_value IS NULL) OR (char_length(canonical_value) <= 120)))
 );
 
 -- Bitácora de auditoría
