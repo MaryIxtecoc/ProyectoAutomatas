@@ -76,6 +76,10 @@
 
             var phone = PhonePolicy.Normalize(request.Phone);
 
+            var nickname = FieldLimits.NormalizeNickname(request.Nickname);
+
+            FieldLimits.EnsureEmailLength(email);
+
             if (string.IsNullOrWhiteSpace(request.PhotoOriginalBase64))
             {
                 throw new ArgumentException(
@@ -147,7 +151,7 @@
                 Email = email,
                 Phone = phone,
                 BirthDate = request.BirthDate,
-                Nickname = request.Nickname.Trim(),
+                Nickname = nickname,
                 PasswordHash = _passwordService.HashPassword(request.Password),
                 RoleId = analistaRole.Id,
                 NotificationMethod = notificationMethod,

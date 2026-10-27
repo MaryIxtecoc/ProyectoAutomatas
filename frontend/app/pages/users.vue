@@ -435,6 +435,7 @@ onMounted(() => {
                 v-model="form.email"
                 type="email"
                 required
+                maxlength="254"
                 placeholder="usuario@correo.com"
               />
             </label>
@@ -460,6 +461,8 @@ onMounted(() => {
                 v-model="form.nickname"
                 type="text"
                 required
+                minlength="3"
+                maxlength="30"
                 placeholder="Nombre del usuario"
               />
             </label>

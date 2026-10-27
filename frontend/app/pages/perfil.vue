@@ -457,6 +457,8 @@ onMounted(() => {
                 id="nickname"
                 v-model="form.nickname"
                 type="text"
+                minlength="3"
+                maxlength="30"
                 :disabled="savingProfile"
               >
             </div>
