@@ -354,6 +354,16 @@ public class AnalysisService
         return job.ReportPdfPath;
     }
 
+    /// <summary>
+    /// Descarga el archivo .txt original que el usuario subió para este análisis.
+    /// </summary>
+    public async Task<byte[]> DownloadOriginalFileAsync(AnalysisJob job)
+    {
+        return await _storage.DownloadAsync(
+            "analysis-files",
+            job.FileStoragePath);
+    }
+
     public async Task<byte[]> DownloadReportAsync(string reportPath)
     {
         return await _storage.DownloadAsync(

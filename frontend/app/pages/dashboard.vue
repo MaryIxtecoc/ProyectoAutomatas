@@ -68,6 +68,50 @@ async function sendReport(channel: 'EMAIL' | 'WHATSAPP') {
 
 const fileInput = ref<HTMLInputElement | null>(null)
 
+// Vista previa del archivo seleccionado (antes de enviarlo a analizar).
+const PREVIEW_MAX_CHARS = 5000
+const previewText = ref('')
+const previewTruncated = ref(false)
+const previewStats = ref({ lines: 0, words: 0, chars: 0 })
+const previewLoading = ref(false)
+const previewError = ref('')
+
+async function buildPreview(file: File) {
+  previewLoading.value = true
+  previewError.value = ''
+  previewText.value = ''
+
+  try {
+    const text = (await file.text()).replace(/^﻿/, '')
+
+    // Si el usuario cambió de archivo mientras se leía, se descarta.
+    if (selectedFile.value !== file) return
+
+    const trimmed = text.trim()
+    previewStats.value = {
+      lines: text.length ? text.split(/\r\n|\r|\n/).length : 0,
+      words: trimmed ? trimmed.split(/\s+/u).length : 0,
+      chars: [...text].length,
+    }
+    previewTruncated.value = text.length > PREVIEW_MAX_CHARS
+    previewText.value = previewTruncated.value
+      ? text.slice(0, PREVIEW_MAX_CHARS)
+      : text
+  } catch {
+    previewError.value = 'No fue posible leer el archivo para la vista previa.'
+  } finally {
+    previewLoading.value = false
+  }
+}
+
+function resetPreview() {
+  previewText.value = ''
+  previewTruncated.value = false
+  previewStats.value = { lines: 0, words: 0, chars: 0 }
+  previewError.value = ''
+  previewLoading.value = false
+}
+
 const languageNames: Record<string, string> = {
   ES: 'Español',
   EN: 'English',
@@ -86,28 +130,33 @@ function handleFile(event: Event) {
 
   if (!file) {
     selectedFile.value = null
+    resetPreview()
     return
   }
 
   if (!file.name.toLowerCase().endsWith('.txt')) {
     error.value = 'Solo se permiten archivos .txt.'
     selectedFile.value = null
+    resetPreview()
     return
   }
 
   if (file.size > 5 * 1024 * 1024) {
     error.value = 'El archivo no puede superar los 5 MB.'
     selectedFile.value = null
+    resetPreview()
     return
   }
 
   error.value = ''
   success.value = ''
   selectedFile.value = file
+  buildPreview(file)
 }
 
 function clearFile() {
   selectedFile.value = null
+  resetPreview()
 
   if (fileInput.value) {
     fileInput.value.value = ''
@@ -442,6 +491,55 @@ onMounted(() => {
               Quitar archivo
             </button>
           </template>
+        </div>
+
+        <div
+          v-if="selectedFile"
+          class="file-preview"
+        >
+          <div class="preview-header">
+            <strong>Vista previa</strong>
+
+            <span v-if="!previewLoading && !previewError">
+              {{ previewStats.lines }} líneas ·
+              {{ previewStats.words }} palabras ·
+              {{ previewStats.chars }} caracteres
+            </span>
+          </div>
+
+          <p
+            v-if="previewLoading"
+            class="preview-status"
+          >
+            Leyendo archivo...
+          </p>
+
+          <p
+            v-else-if="previewError"
+            class="preview-status preview-error"
+          >
+            {{ previewError }}
+          </p>
+
+          <p
+            v-else-if="!previewText.trim()"
+            class="preview-status"
+          >
+            El archivo está vacío.
+          </p>
+
+          <pre
+            v-else
+            class="preview-content"
+            dir="auto"
+          >{{ previewText }}</pre>
+
+          <p
+            v-if="previewTruncated"
+            class="preview-status"
+          >
+            Mostrando los primeros 5,000 caracteres. El archivo completo se enviará al análisis.
+          </p>
         </div>
 
         <div class="options">
@@ -990,6 +1088,78 @@ h3 {
   color: #647e9f;
 
   font-size: 12px;
+}
+
+.file-preview {
+  margin-top: 14px;
+
+  border: 1px solid rgba(73, 151, 208, 0.25);
+
+  border-radius: 14px;
+
+  background: rgba(73, 151, 208, 0.04);
+
+  overflow: hidden;
+}
+
+.preview-header {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 6px 12px;
+
+  padding: 10px 14px;
+
+  border-bottom: 1px solid rgba(73, 151, 208, 0.18);
+
+  font-size: 13px;
+}
+
+.preview-header span {
+  color: #627c9f;
+
+  font-size: 11px;
+}
+
+.preview-content {
+  margin: 0;
+
+  max-height: 260px;
+
+  overflow: auto;
+
+  padding: 12px 14px;
+
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  font-size: 12.5px;
+
+  line-height: 1.55;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+
+  unicode-bidi: plaintext;
+}
+
+.preview-status {
+  margin: 0;
+
+  padding: 10px 14px;
+
+  color: #627c9f;
+
+  font-size: 12px;
+}
+
+.preview-error {
+  color: #fca5a5;
 }
 
 .remove-file {
