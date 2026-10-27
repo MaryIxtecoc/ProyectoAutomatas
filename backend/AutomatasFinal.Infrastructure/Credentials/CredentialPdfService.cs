@@ -25,6 +25,22 @@ public class CredentialPdfService
     public static float CardWidth => CardWidthCm * PointsPerCm;
     public static float CardHeight => CardHeightCm * PointsPerCm;
 
+    private static readonly byte[]? UmgLogo = LoadUmgLogo();
+
+    private static byte[]? LoadUmgLogo()
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "Assets", "umg-logo.png");
+        return File.Exists(path) ? File.ReadAllBytes(path) : null;
+    }
+
+    private static (float X, float Y, float Size) LogoPlacement(string template, float cardWidth, float cardHeight) =>
+        template switch
+        {
+            "LATERAL" => (cardWidth - 24 - 8, 6, 24),
+            "MINIMAL" => (cardWidth - 20 - 10, cardHeight - 20 - 4, 20),
+            _ => (cardWidth - 26 - 10, 4, 26)
+        };
+
     public byte[] Generate(
         User user,
         string roleName,
@@ -81,6 +97,19 @@ public class CredentialPdfService
                                     break;
                             }
                         });
+
+                        if (UmgLogo is not null)
+                        {
+                            var (logoX, logoY, logoSize) = LogoPlacement(design.Template, cardWidth, cardHeight);
+
+                            layers.Layer()
+                                .OffsetX(logoX)
+                                .OffsetY(logoY)
+                                .Width(logoSize)
+                                .Height(logoSize)
+                                .Image(UmgLogo)
+                                .FitArea();
+                        }
 
                         foreach (var (decoration, bytes) in stickers)
                         {
