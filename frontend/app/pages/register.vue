@@ -972,6 +972,8 @@ onBeforeUnmount(() => {
               v-model="nickname"
               type="text"
               required
+              minlength="3"
+              maxlength="30"
               placeholder="Tu nombre de usuario"
             >
           </label>
@@ -983,6 +985,7 @@ onBeforeUnmount(() => {
               v-model="email"
               type="email"
               required
+              maxlength="254"
               placeholder="usuario@correo.com"
             >
           </label>
