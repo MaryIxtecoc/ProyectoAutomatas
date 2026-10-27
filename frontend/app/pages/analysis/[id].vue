@@ -402,6 +402,55 @@ async function loadAnalysis() {
   }
 }
 
+// Vista previa del archivo original analizado.
+const PREVIEW_MAX_CHARS = 5000
+const fileText = ref('')
+const fileTruncated = ref(false)
+const fileLoading = ref(false)
+const fileError = ref('')
+const fileExpanded = ref(false)
+const fileStats = ref({ lines: 0, words: 0, chars: 0 })
+
+async function loadOriginalFile() {
+  fileLoading.value = true
+  fileError.value = ''
+
+  try {
+    const token = getAuthToken()
+    const id = String(route.params.id)
+
+    const response = await fetch(
+      `${useRuntimeConfig().public.apiUrl}/Analysis/${id}/file`,
+      {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error('No fue posible cargar el archivo original.')
+    }
+
+    const text = (await response.text()).replace(/^﻿/, '')
+    const trimmed = text.trim()
+
+    fileStats.value = {
+      lines: text.length ? text.split(/\r\n|\r|\n/).length : 0,
+      words: trimmed ? trimmed.split(/\s+/u).length : 0,
+      chars: [...text].length,
+    }
+    fileTruncated.value = text.length > PREVIEW_MAX_CHARS
+    fileText.value = fileTruncated.value
+      ? text.slice(0, PREVIEW_MAX_CHARS)
+      : text
+  } catch (err) {
+    fileError.value = err instanceof Error
+      ? err.message
+      : 'No fue posible cargar el archivo original.'
+  } finally {
+    fileLoading.value = false
+  }
+}
+
 async function goBack() {
   await navigateTo('/dashboard')
 }
@@ -498,6 +547,7 @@ function logout() {
 
 onMounted(() => {
   loadAnalysis()
+  loadOriginalFile()
 })
 </script>
 
@@ -757,6 +807,75 @@ onMounted(() => {
                 formas raíz
               </small>
             </article>
+          </section>
+
+          <section class="panel file-panel">
+            <div class="panel-title">
+              <div>
+                <span class="panel-number">
+                  TXT
+                </span>
+
+                <h3>
+                  Vista previa del archivo
+                </h3>
+              </div>
+
+              <span
+                v-if="!fileLoading && !fileError"
+                class="file-stats"
+              >
+                {{ fileStats.lines }} líneas ·
+                {{ fileStats.words }} palabras ·
+                {{ fileStats.chars }} caracteres
+              </span>
+            </div>
+
+            <div
+              v-if="fileLoading"
+              class="empty-small"
+            >
+              Cargando archivo...
+            </div>
+
+            <div
+              v-else-if="fileError"
+              class="empty-small"
+            >
+              {{ fileError }}
+            </div>
+
+            <div
+              v-else-if="!fileText.trim()"
+              class="empty-small"
+            >
+              El archivo está vacío.
+            </div>
+
+            <template v-else>
+              <pre
+                class="file-content"
+                :class="{ expanded: fileExpanded }"
+                dir="auto"
+              >{{ fileText }}</pre>
+
+              <div class="file-footer">
+                <span
+                  v-if="fileTruncated"
+                  class="empty-small"
+                >
+                  Mostrando los primeros 5,000 caracteres.
+                </span>
+
+                <button
+                  type="button"
+                  class="file-toggle"
+                  @click="fileExpanded = !fileExpanded"
+                >
+                  {{ fileExpanded ? 'Ver menos' : 'Ver más' }}
+                </button>
+              </div>
+            </template>
           </section>
 
           <section class="two-column">
@@ -1760,6 +1879,82 @@ onMounted(() => {
   color: #627c9f;
 
   font-size: 11px;
+}
+
+.file-stats {
+  color: #627c9f;
+
+  font-size: 11px;
+}
+
+.file-content {
+  margin: 0;
+
+  max-height: 180px;
+
+  overflow: auto;
+
+  padding: 14px 16px;
+
+  border: 1px solid rgba(73, 151, 208, 0.13);
+
+  border-radius: 12px;
+
+  background: rgba(5, 13, 27, 0.6);
+
+  color: #cfdcef;
+
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  font-size: 12.5px;
+
+  line-height: 1.6;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+
+  unicode-bidi: plaintext;
+}
+
+.file-content.expanded {
+  max-height: 520px;
+}
+
+.file-footer {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 8px;
+
+  margin-top: 10px;
+}
+
+.file-toggle {
+  margin-left: auto;
+
+  padding: 6px 12px;
+
+  border: 1px solid rgba(73, 151, 208, 0.3);
+
+  border-radius: 10px;
+
+  background: transparent;
+
+  color: #80b6dc;
+
+  cursor: pointer;
+
+  font-size: 12px;
+}
+
+.file-toggle:hover {
+  background: rgba(73, 151, 208, 0.08);
 }
 
 .entities-panel {
