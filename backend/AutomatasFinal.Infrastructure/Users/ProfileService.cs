@@ -351,12 +351,12 @@ public class ProfileService
                 x.IsActive &&
                 x.DeletedAt == null);
 
-        if (user is null || string.IsNullOrWhiteSpace(user.PhotoModifiedPath))
+       if (user is null || string.IsNullOrWhiteSpace(user.PhotoOriginalPath))
         {
             return null;
         }
 
-        var photo = await _storage.DownloadAsync(PhotoBucket, user.PhotoModifiedPath);
+        var photo = await _storage.DownloadAsync(PhotoBucket, user.PhotoOriginalPath);
 
         return await _credentialService.RenderPreviewAsync(
             user,
@@ -384,19 +384,14 @@ public class ProfileService
             return "Usuario no válido.";
         }
 
-        if (string.IsNullOrWhiteSpace(user.PhotoModifiedPath))
+       if (string.IsNullOrWhiteSpace(user.PhotoOriginalPath))
         {
             return "Necesitas una fotografía de perfil para generar tu credencial.";
         }
 
-        var modifiedPhotoBytes = await _storage.DownloadAsync(
-            PhotoBucket,
-            user.PhotoModifiedPath);
+       var originalPhotoBytes = await _storage.DownloadAsync(PhotoBucket, user.PhotoOriginalPath);
 
-        var ok = await _authService.TryIssueCredentialAsync(
-            user,
-            user.Role.Name,
-            modifiedPhotoBytes);
+        var ok = await _authService.TryIssueCredentialAsync(user, user.Role.Name, originalPhotoBytes);
 
         return ok
             ? null
