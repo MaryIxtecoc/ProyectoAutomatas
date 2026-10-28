@@ -189,7 +189,7 @@
                 details: new { role = analistaRole.Code, notificationMethod = notificationMethod.ToString() },
                 actorUserId: user.Id);
 
-            await TryIssueCredentialAsync(user, analistaRole.Name, modifiedPhotoBytes);
+            await TryIssueCredentialAsync(user, analistaRole.Name, croppedOriginalBytes);
 
             return await BuildAuthResponseAsync(user, SessionService.MethodRegister);
         }
@@ -200,14 +200,14 @@
         /// No relanza la excepción: quien llama decide qué hacer si falla
         /// (en registro, se ignora para no tumbar la cuenta ya creada).
         /// </summary>
-        public async Task<bool> TryIssueCredentialAsync(User user, string roleName, byte[] modifiedPhotoBytes)
+        public async Task<bool> TryIssueCredentialAsync(User user, string roleName, byte[] originalPhotoBytes)
         {
             try
             {
                 var (credential, pdfBytes) = await _credentialService.IssueAsync(
                     user,
                     roleName,
-                    modifiedPhotoBytes);
+                    originalPhotoBytes);
 
                 // El PDF ya está en Storage (archivo propio). En una sola
                 // transacción se desactiva la anterior y se guarda la nueva, en
