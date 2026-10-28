@@ -2,8 +2,8 @@
 #   1) cp .env.example .env   y llena los valores reales (no subas .env a git)
 #   2) docker compose up --build
 #
-# No se levanta un contenedor de Postgres aparte: el backend se conecta
-# directo a la base de Supabase (DB_CONNECTION_STRING), igual que en local.
+# No se levanta un contenedor de Postgres para el backend principal: se conecta
+# directo a Supabase. Postgres aquí se usa únicamente para la Evolution API.
 
 services:
   backend:
@@ -33,12 +33,16 @@ services:
       Twilio__WhatsAppFrom: ${TWILIO_WHATSAPP_FROM}
       Recaptcha__SecretKey: ${RECAPTCHA_SECRET_KEY}
       NlpService__BaseUrl: ${NLP_SERVICE_URL:-http://nlp:8000}
+      # Configuración de Evolution API para el envío de credenciales por WhatsApp:
+      WhatsAppApi__BaseUrl: ${WHATSAPP_API_URL:-http://evolution-api:8080}
+      WhatsAppApi__ApiKey: ${WHATSAPP_API_KEY:-}
+      WhatsAppApi__Instance: ${WHATSAPP_INSTANCE:-credenciales}
     depends_on:
       - nlp
+      - evolution-api
     restart: unless-stopped
 
   # Análisis lingüístico con spaCy (ES/EN/RU/ZH) y Stanza (AR).
-  # Si este servicio no responde, el backend usa su analizador propio.
   nlp:
     build:
       context: ./nlp-service
@@ -57,4 +61,32 @@ services:
       NUXT_PUBLIC_RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY:-6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI}
     depends_on:
       - backend
+    restart: unless-stopped
+
+  # --- SERVICIOS DE WHATSAPP (EVOLUTION API) ---
+  postgres-evolution:
+    image: postgres:15-alpine
+    container_name: postgres-evolution
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: evolution
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  evolution-api:
+    image: mi-evolution-api
+    container_name: evolution-api
+    ports:
+      - "8081:8080" 
+    environment:
+      - AUTHENTICATION_API_KEY=${WHATSAPP_API_KEY:-}
+      - SERVER_URL=http://localhost:8081
+      - DATABASE_ENABLED=true
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_URI=postgresql://root:root@postgres-evolution:5432/evolution?schema=public
+      - DATABASE_SAVE_DATA_INSTANCE=true
+    depends_on:
+      - postgres-evolution
     restart: unless-stopped
