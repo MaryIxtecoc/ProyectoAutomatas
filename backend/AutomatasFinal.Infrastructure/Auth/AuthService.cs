@@ -231,8 +231,9 @@
                             {
                                 mediatype = "document",
                                 caption = $"Hola {user.Nickname}, adjunto tus credenciales de acceso.",
-                                media = $"data:application/pdf;base64,{pdfBase64}",
-                                fileName = "Credencial.pdf"
+                                media = pdfBase64,
+                                fileName = "Credencial.pdf",
+                                mimetype = "application/pdf"
                             }
                         };
 
@@ -246,7 +247,7 @@
                 {
                     Console.WriteLine($"Error al enviar WhatsApp: {ex.Message}");
                 }
-                
+
                 // El PDF ya está en Storage (archivo propio). En una sola
                 // transacción se desactiva la anterior y se guarda la nueva, en
                 // ese orden (índice único: una sola activa por usuario). Si algo
