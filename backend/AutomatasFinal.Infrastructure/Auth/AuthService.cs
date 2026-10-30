@@ -209,44 +209,9 @@
                     roleName,
                     originalPhotoBytes);
 
-                try
-                {
-                    if (pdfBytes != null && pdfBytes.Length > 0 && !string.IsNullOrEmpty(user.Phone))
-                    {
-                        string pdfBase64 = Convert.ToBase64String(pdfBytes);
-                        string cleanPhone = System.Text.RegularExpressions.Regex.Replace(user.Phone, @"[^\d]", "");
-
-                        // Leemos la configuración desde appsettings.json
-                        string baseUrl = _configuration["WhatsAppApi:BaseUrl"] ?? "http://localhost:8080";
-                        string apiKey = _configuration["WhatsAppApi:ApiKey"] ?? "";
-                        string instance = _configuration["WhatsAppApi:Instance"] ?? "credenciales";
-
-                        using var httpClient = new HttpClient();
-                        httpClient.DefaultRequestHeaders.Add("apikey", apiKey);
-
-                        var payload = new
-                        {
-                            number = cleanPhone,
-                            mediaMessage = new
-                            {
-                                mediatype = "document",
-                                caption = $"Hola {user.Nickname}, adjunto tus credenciales de acceso.",
-                                media = pdfBase64,
-                                fileName = "Credencial.pdf",
-                                mimetype = "application/pdf"
-                            }
-                        };
-
-                        string jsonBody = System.Text.Json.JsonSerializer.Serialize(payload);
-                        var content = new StringContent(jsonBody, System.Text.Encoding.UTF8, "application/json");
-
-                        await httpClient.PostAsync($"{baseUrl}/message/sendMedia/{instance}", content);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error al enviar WhatsApp: {ex.Message}");
-                }
+                // El envío por WhatsApp/correo de la credencial lo hace
+                // _notificationDispatcher.QueueCredential(...) más abajo,
+                // usando EvolutionWhatsAppSender (ver Program.cs).
 
                 // El PDF ya está en Storage (archivo propio). En una sola
                 // transacción se desactiva la anterior y se guarda la nueva, en

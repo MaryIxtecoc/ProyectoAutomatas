@@ -37,7 +37,13 @@ builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
-builder.Services.AddScoped<IWhatsAppSender, TwilioWhatsAppSender>();
+// WhatsApp por Evolution API (Render). Timeout largo: el plan gratis de Render
+// "se duerme" y la primera petición puede tardar ~1 minuto en despertar.
+// Para volver a Twilio: builder.Services.AddScoped<IWhatsAppSender, TwilioWhatsAppSender>();
+builder.Services.AddHttpClient<IWhatsAppSender, EvolutionWhatsAppSender>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(90);
+});
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<NotificationDispatcher>();
 
